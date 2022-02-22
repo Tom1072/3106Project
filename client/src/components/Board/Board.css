@@ -1,0 +1,26 @@
+:root {
+  --cell-size: 10vh;
+  --min-cell-size: 50px;
+  --cell-border: 1px;
+  --min-board-size: calc((var(--min-cell-size) + var(--cell-border)) * 8 - var(--board-border));
+  --board-border: 3px;
+  --board-size: calc((var(--cell-size) + var(--cell-border)) * 8 - var(--board-border));
+}
+
+.board-cell {
+  min-width: var(--min-cell-size);
+  min-height: var(--min-cell-size);
+  width: var(--cell-size);
+  height: var(--cell-size);
+  border: var(--cell-border) solid black;
+}
+
+.board {
+  min-width: var(--min-board-size);
+  min-height: var(--min-board-size);
+  width: var(--board-size);
+  height: var(--board-size);
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  border: var(--board-border) solid black;
+}
