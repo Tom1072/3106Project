@@ -15,7 +15,13 @@
   border: var(--cell-border) solid black;
 }
 
+.board-container {
+  display: flex;
+  flex: 1;
+}
+
 .board {
+  margin: auto;
   min-width: var(--min-board-size);
   min-height: var(--min-board-size);
   width: var(--board-size);

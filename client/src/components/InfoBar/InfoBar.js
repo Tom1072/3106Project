@@ -1,5 +1,5 @@
 import { Navbar } from "react-bootstrap";
-import { BsGithub, BsHouseDoorFill } from "react-icons/bs";
+import { BsGithub } from "react-icons/bs";
 // import { Container } from 'react-dom';
 import "./InfoBar.css";
 

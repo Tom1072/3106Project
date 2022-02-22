@@ -1,0 +1,9 @@
+.drawer {
+  display: flex;
+  flex-direction: column;
+
+  padding: 15px;
+  width: 300px;
+  min-width: 220px;
+  border-right: 2px solid #bebebe;
+}

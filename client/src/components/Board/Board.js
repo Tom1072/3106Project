@@ -40,7 +40,11 @@ const Board = () => {
     );
   };
 
-  return <div className="board">{renderBoard()}</div>;
+  return (
+    <div className="board-container">
+      <div className="board">{renderBoard()}</div>;
+    </div>
+  );
 };
 
 export default Board;
