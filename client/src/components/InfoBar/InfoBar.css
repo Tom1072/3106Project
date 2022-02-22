@@ -1,7 +1,13 @@
 .nav-container {
   width: 100%;
+  padding: 30px;
+  box-shadow: rgba(0, 0, 0, 0.15) 0px 3px 3px 0px;
 }
 
 .icon {
   font-size: 30px;
+}
+
+.title {
+  font-weight: 500;
 }

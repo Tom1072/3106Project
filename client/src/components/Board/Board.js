@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { PIECES_SVG } from "../../assets/pieces";
 import "./Board.css";
 
 const initBoard = () => {
@@ -31,7 +32,7 @@ const Board = () => {
               key={`${r_index}${c_index}`}
               className="board-cell"
             >
-              {cell}
+              {PIECES_SVG[cell]}
             </div>
           ))
         )}

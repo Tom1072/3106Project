@@ -4,10 +4,12 @@ import "./App.css"
 
 function App() {
   return (
-    <div className="app">
+    <>
       <InfoBar />
-      <Board />
-    </div>
+      <div className="body">
+        <Board />
+      </div>
+    </>
   );
 }
 
