@@ -12,6 +12,7 @@ function App() {
   const [yourTurn, setYourTurn] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [youWin, setYouWin] = useState(true);
+  const [choosingPiece, setChoosingPiece] = useState(true);
 
   const handleStartGame = (algorithm) => {
     console.log(`Starting with ${algorithm} algorithm`);
@@ -23,6 +24,11 @@ function App() {
     setGameStarted(false);
     setYourTurn(true);
     setBoard(initBoard());
+    setChoosingPiece(true);
+  };
+
+  const handleChoosePiece = (r, c) => {
+    setChoosingPiece(false);
   };
 
   const toggleModal = () => setShowModal(!showModal);
@@ -43,6 +49,8 @@ function App() {
           board={board}
           switchTurn={() => setYourTurn(!yourTurn)}
           disabled={!(gameStarted && yourTurn)}
+          choosingPiece={choosingPiece}
+          choosePiece={handleChoosePiece}
         />
         <Modal
           className={youWin ? "win-modal" : "lose-modal"}

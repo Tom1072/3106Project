@@ -2,9 +2,7 @@ import { useState } from "react";
 import { PIECES_SVG } from "../../assets/pieces";
 import "./Board.css";
 
-const Board = ({ board, disabled, switchTurn }) => {
-  const [choosingPiece, setChoosingPiece] = useState(true);
-
+const Board = ({ board, disabled, switchTurn, choosingPiece, choosePiece }) => {
   /**
    * Get the class name of a cell to add interaction according to the cell's piece.
    * @param {string | null} cell_piece Piece code to identify your own pieces
@@ -24,12 +22,12 @@ const Board = ({ board, disabled, switchTurn }) => {
     return className;
   };
 
-  const handleChoosePiece = (pieceCode) => {
+  const handleChoosePiece = (r, c, pieceCode) => {
     if (!pieceCode)
       return;
 
     console.log(pieceCode + " chose!");
-    setChoosingPiece(false);
+    choosePiece(r, c);
   };
 
   const handleMove = (r, c, valid) => {
@@ -37,7 +35,6 @@ const Board = ({ board, disabled, switchTurn }) => {
       return;
 
     console.log(`Move at (${r}, ${c})`);
-    setChoosingPiece(true);
     switchTurn();
   };
 
@@ -55,7 +52,7 @@ const Board = ({ board, disabled, switchTurn }) => {
               className={getCellClass(cell, r_index, c_index)}
               onClick={() =>
                 choosingPiece
-                  ? handleChoosePiece(cell)
+                  ? handleChoosePiece(r_index, c_index, cell)
                   : handleMove(r_index, c_index, true)
               }
             >
