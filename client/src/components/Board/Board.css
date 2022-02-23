@@ -42,8 +42,14 @@
   height: 100%;
 }
 
-.available-piece:hover, .available-move {
+.available-piece:hover {
+  background: rgb(255, 243, 68);
+  cursor: pointer;
+}
+
+.available-move {
   background: rgb(32, 221, 133);
+  cursor: pointer;
 }
 
 .colored-cell {

@@ -88,7 +88,7 @@ const Board = ({ disabled }) => {
 
   return (
     <div className={`board-container ${disabled ? "disabled" : ""}`}>
-      <div className="board">{renderBoard()}</div>;
+      <div className="board">{renderBoard()}</div>
     </div>
   );
 };
