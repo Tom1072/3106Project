@@ -15,6 +15,10 @@
   border: var(--cell-border) solid black;
 }
 
+.board-cell:hover {
+  background: rgb(32, 221, 133);
+}
+
 .board-container {
   display: flex;
   flex: 1;
@@ -34,6 +38,10 @@
 .board img {
   width: 100%;
   height: 100%;
+}
+
+.colored-cell {
+  background-color: #bdbdbd;
 }
 
 .disabled {

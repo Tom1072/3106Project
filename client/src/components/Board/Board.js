@@ -26,11 +26,8 @@ const Board = ({ disabled }) => {
         {board.map((row, r_index) =>
           row.map((cell, c_index) => (
             <div
-              style={{
-                background: (r_index + c_index) & 1 ? "#fff" : "#bdbdbd",
-              }}
               key={`${r_index}${c_index}`}
-              className="board-cell"
+              className={`board-cell ${(r_index + c_index) & 1 ? "" : "colored-cell"}`}
             >
               {PIECES_SVG[cell]}
             </div>
