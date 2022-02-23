@@ -5,17 +5,28 @@ routes = Blueprint("routes", __name__)
 chess_board = ChessBoard()
 
 
-@routes.route('/api/mouse-clicked', methods=['POST'])
-def handle_mouse_clicked():
-    row, col = request.json["position"]["row"], request.json["position"]["col"]
+@routes.route('/api/move', methods=['GET', 'POST'])
+def handle_get_move():
+    if request.method == 'GET':
+        row, col = request.json["position"]["row"], request.json["position"]["col"]
 
-    response_payload = {
-        "board": chess_board.get_board()
-    }
-    return response_payload
+        possible_moves = chess_board.get_possible_moves(row, col)
+        response_payload = {
+            "availablePositions": possible_moves,
+            "request_body": request.json
+        }
+
+        return response_payload
+
+    elif request.method == 'POST':
+        org_post = request.json["move"]["prev"]
+        dest_post = request.json["move"]["next"]
+        org_row, org_col = org_post["row"], org_post["col"]
+        dest_row, dest_col = dest_post["row"], dest_post["col"]
 
 
-
-@routes.route('/api/', methods=['GET'])
-def handle_test():
-    return "<h1>Hello world</h1>"
+        response_payload = {
+            "board": chess_board.get_board(),
+            "request_body": request.json
+        }
+        return response_payload
