@@ -21,7 +21,7 @@ const initBoard = () => {
   return board;
 };
 
-const Board = ({ disabled }) => {
+const Board = ({ disabled, switchTurn }) => {
   const [board, setBoard] = useState(initBoard());
   const [choosingPiece, setChoosingPiece] = useState(true);
 
@@ -58,6 +58,7 @@ const Board = ({ disabled }) => {
 
     console.log(`Move at (${r}, ${c})`);
     setChoosingPiece(true);
+    switchTurn();
   };
 
   /**

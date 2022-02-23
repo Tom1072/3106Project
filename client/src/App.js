@@ -6,6 +6,7 @@ import "./App.css";
 
 function App() {
   const [gameStarted, setGameStarted] = useState(false);
+  const [yourTurn, setYourTurn] = useState(true);
 
   const handleStartGame = (algorithm) => {
     console.log(`Starting with ${algorithm} algorithm`);
@@ -25,8 +26,12 @@ function App() {
           handleStart={handleStartGame}
           handleStop={handleStopGame}
           started={gameStarted}
+          yourTurn={yourTurn}
         />
-        <Board disabled={!gameStarted} />
+        <Board
+          switchTurn={() => setYourTurn(!yourTurn)}
+          disabled={!(gameStarted && yourTurn)}
+        />
       </div>
     </>
   );

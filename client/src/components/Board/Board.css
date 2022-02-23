@@ -35,6 +35,7 @@
   display: grid;
   grid-template-columns: repeat(8, 1fr);
   border: var(--board-border) solid black;
+  user-select: none;
 }
 
 .board img {

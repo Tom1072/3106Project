@@ -3,7 +3,7 @@ import { Algorithms } from "../../assets/constants";
 import { Form, Button } from "react-bootstrap";
 import { useState } from "react";
 
-const Drawer = ({ handleStart, handleStop, started }) => {
+const Drawer = ({ handleStart, handleStop, started, yourTurn }) => {
   const [algorithm, setAlgorithm] = useState(Algorithms.MINIMAX);
 
   const handleSubmit = (e) => {
@@ -15,6 +15,9 @@ const Drawer = ({ handleStart, handleStop, started }) => {
 
   return (
     <div className="drawer">
+      <Button variant={yourTurn ? "success" : "danger"} className="turn-status" size="lg">
+        {yourTurn ? "Your turn" : "Opponent's turn"}
+      </Button>
       <Form onSubmit={handleSubmit}>
         <Form.Group>
           <Form.Label>Search Algorithm</Form.Label>
@@ -24,7 +27,7 @@ const Drawer = ({ handleStart, handleStop, started }) => {
             onChange={(e) => setAlgorithm(e.target.value)}
           >
             <option value={Algorithms.MINIMAX}>Minimax Search</option>
-            <option value={Algorithms.MONTE_CARLO}>Monte Carlo Search</option>
+            <option value={Algorithms.MONTE_CARLO}>Monte-Carlo Search</option>
           </Form.Select>
         </Form.Group>
 
@@ -32,7 +35,7 @@ const Drawer = ({ handleStart, handleStop, started }) => {
 
         <Button
           className="button"
-          variant={started ? "danger" : "primary"}
+          variant={started ? "outline-danger" : "outline-primary"}
           type="submit"
         >
           {started ? "Stop Game" : "Start Game"}
