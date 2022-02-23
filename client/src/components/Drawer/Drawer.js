@@ -5,7 +5,6 @@ import { useState } from "react";
 
 const Drawer = ({ handleStart, handleStop, started }) => {
   const [algorithm, setAlgorithm] = useState(Algorithms.MINIMAX);
-  const [goFirst, setGoFirst] = useState(true);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -29,12 +28,7 @@ const Drawer = ({ handleStart, handleStop, started }) => {
           </Form.Select>
         </Form.Group>
 
-        <Form.Switch
-          disabled={started}
-          checked={goFirst}
-          onChange={(e) => setGoFirst(e.target.checked)}
-          label="You go first (White)"
-        />
+        <Form.Label>You go first with <b>white</b> pieces.</Form.Label>
 
         <Button
           className="button"
