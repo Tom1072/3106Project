@@ -36,7 +36,6 @@ function App() {
   return (
     <>
       <InfoBar />
-      <Button>Shuffle board</Button>
       <div className="body">
         <Drawer
           handleStart={handleStartGame}
