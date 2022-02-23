@@ -7,3 +7,11 @@
   min-width: 220px;
   border-right: 2px solid #bebebe;
 }
+
+.drawer > form > * {
+  margin-top: 15px;
+}
+
+.button {
+  width: 100%;
+}

@@ -17,7 +17,7 @@ const initBoard = () => {
   return board;
 };
 
-const Board = () => {
+const Board = ({ disabled }) => {
   const [board, setBoard] = useState(initBoard());
 
   const renderBoard = () => {
@@ -41,7 +41,7 @@ const Board = () => {
   };
 
   return (
-    <div className="board-container">
+    <div className={`board-container ${disabled ? "disabled" : ""}`}>
       <div className="board">{renderBoard()}</div>;
     </div>
   );
