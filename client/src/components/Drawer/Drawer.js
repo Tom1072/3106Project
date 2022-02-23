@@ -3,7 +3,7 @@ import { Algorithms } from "../../assets/constants";
 import { Form, Button } from "react-bootstrap";
 import { useState } from "react";
 
-const Drawer = ({ handleStart, handleStop, started, yourTurn }) => {
+const Drawer = ({ handleStart, handleStop, started, yourTurn, shuffleBoard }) => {
   const [algorithm, setAlgorithm] = useState(Algorithms.MINIMAX);
 
   const handleSubmit = (e) => {
@@ -35,12 +35,19 @@ const Drawer = ({ handleStart, handleStop, started, yourTurn }) => {
 
         <Button
           className="button"
-          variant={started ? "outline-danger" : "outline-primary"}
+          variant={started ? "danger" : "primary"}
           type="submit"
         >
           {started ? "Stop Game" : "Start Game"}
         </Button>
       </Form>
+      <Button
+        className="button"
+        variant="warning"
+        onClick={shuffleBoard}
+      >
+        Shuffle Board
+      </Button>
     </div>
   );
 };

@@ -2,27 +2,7 @@ import { useState } from "react";
 import { PIECES_SVG } from "../../assets/pieces";
 import "./Board.css";
 
-/**
- * Generate an initial chess board.
- * @returns {[Array<string | null>]}
- */
-const initBoard = () => {
-  const board = [];
-
-  for (let i = 0; i < 8; i++) {
-    if (i === 0) board.push(["br", "bkt", "bb", "bk", "bq", "bb", "bkt", "br"]);
-    else if (i === 1) board.push(new Array(8).fill("bp"));
-    else if (i === 6) board.push(new Array(8).fill("wp"));
-    else if (i === 7)
-      board.push(["wr", "wkt", "wb", "wk", "wq", "wb", "wkt", "wr"]);
-    else board.push(new Array(8).fill(null));
-  }
-
-  return board;
-};
-
-const Board = ({ disabled, switchTurn }) => {
-  const [board, setBoard] = useState(initBoard());
+const Board = ({ board, disabled, switchTurn }) => {
   const [choosingPiece, setChoosingPiece] = useState(true);
 
   /**

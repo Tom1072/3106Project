@@ -3,10 +3,12 @@ import InfoBar from "./components/InfoBar/InfoBar";
 import Board from "./components/Board/Board";
 import Drawer from "./components/Drawer/Drawer";
 import { Modal, Button } from "react-bootstrap";
+import { initBoard, shuffleBoard } from "./utils/utilFunctions";
 import "./App.css";
 
 function App() {
   const [gameStarted, setGameStarted] = useState(false);
+  const [board, setBoard] = useState(initBoard());
   const [yourTurn, setYourTurn] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [youWin, setYouWin] = useState(true);
@@ -19,6 +21,8 @@ function App() {
   const handleStopGame = () => {
     console.log("Game stopped");
     setGameStarted(false);
+    setYourTurn(true);
+    setBoard(initBoard());
   };
 
   const toggleModal = () => setShowModal(!showModal);
@@ -26,14 +30,17 @@ function App() {
   return (
     <>
       <InfoBar />
+      <Button>Shuffle board</Button>
       <div className="body">
         <Drawer
           handleStart={handleStartGame}
           handleStop={handleStopGame}
           started={gameStarted}
           yourTurn={yourTurn}
+          shuffleBoard={() => setBoard(shuffleBoard(board))}
         />
         <Board
+          board={board}
           switchTurn={() => setYourTurn(!yourTurn)}
           disabled={!(gameStarted && yourTurn)}
         />
