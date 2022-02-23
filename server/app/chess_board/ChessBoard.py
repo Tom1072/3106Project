@@ -53,7 +53,7 @@ class ChessBoard:
             return None
 
     def remove_piece(self, row: int, col: int) -> ChessPiece:
-        """Remove a chess piece from the board
+        """Remove and return a chess piece from the board
 
         Args:
             row (int): column of the board
@@ -104,6 +104,7 @@ class ChessBoard:
 
             # Set destination position to be that removed piece
             self.set_piece(dest_row, dest_col, piece)
+            return True
         else:
             return False
 

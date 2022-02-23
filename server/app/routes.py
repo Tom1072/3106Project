@@ -13,7 +13,6 @@ def handle_get_move():
         possible_moves = chess_board.get_possible_moves(row, col)
         response_payload = {
             "availablePositions": possible_moves,
-            "request_body": request.json
         }
 
         return response_payload
@@ -24,9 +23,17 @@ def handle_get_move():
         org_row, org_col = org_post["row"], org_post["col"]
         dest_row, dest_col = dest_post["row"], dest_post["col"]
 
-
-        response_payload = {
-            "board": chess_board.get_board(),
-            "request_body": request.json
-        }
+        response_payload = {}
+        if chess_board.move(org_row, org_col, org_row, org_col):
+            response_payload["move"] = {
+                "prev": {"row": org_row, "col": org_col},
+                "next": {"row": dest_row, "col": dest_col}
+            }
+        else:
+            # No change
+            response_payload["move"] = {
+                "prev": {"row": org_row, "col": org_col},
+                "next": {"row": org_row, "col": org_col}
+            }
+            
         return response_payload
