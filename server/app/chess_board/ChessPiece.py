@@ -18,7 +18,7 @@ class ChessPiece:
         self.row, self.col = dest_row, dest_col
 
     def is_in_range(self, row: int, col: int) -> bool:
-        return row >= 0 and row <= 7 and col >= 0 and col <= 7
+        return self.chess_board.is_in_range(row, col)
 
     def is_occupied(self, row: int, col: int) -> bool:
         return self.chess_board.get_piece(row, col) is not None

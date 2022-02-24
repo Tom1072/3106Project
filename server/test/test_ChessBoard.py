@@ -89,8 +89,6 @@ def test_get_possible_moves(chessboard: ChessBoard):
                 for move in possible_moves:
                     assert type(move["row"]) is int
                     assert type(move["col"]) is int
-                    assert move["row"] > 0 and move["col"] > 0
-                    assert move["row"] < BOARD_DIMENSION and move["col"] < BOARD_DIMENSION
 
     oob_positions = [(-1, -1), (8, 8), (-1, 0), (0, -1)]
     for (row, col) in oob_positions:
