@@ -35,5 +35,5 @@ def handle_get_move():
                 "prev": {"row": org_row, "col": org_col},
                 "next": {"row": org_row, "col": org_col}
             }
-            
+
         return response_payload
