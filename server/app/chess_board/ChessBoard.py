@@ -5,19 +5,20 @@ BOARD_DIMENSION = 8
 
 
 class ChessBoard:
-    def __init__(self):
+    def __init__(self, is_blank_board: bool = False):
         self.board = [[None for _ in range(BOARD_DIMENSION)]
                       for _ in range(BOARD_DIMENSION)]
 
-        black_pawn_row = 6
-        for black_pawn_col in range(BOARD_DIMENSION):
-            self.board[6][black_pawn_col] = Pawn(
-                row=black_pawn_row, col=black_pawn_col, is_black_piece=True, chess_board=self)
+        if not is_blank_board:
+            black_pawn_row = 6
+            for black_pawn_col in range(BOARD_DIMENSION):
+                self.board[6][black_pawn_col] = Pawn(
+                    row=black_pawn_row, col=black_pawn_col, is_black_piece=True, chess_board=self)
 
-        white_pawn_row = 1
-        for white_pawn_col in range(BOARD_DIMENSION):
-            self.board[1][white_pawn_col] = Pawn(
-                row=white_pawn_row, col=white_pawn_col, is_black_piece=False, chess_board=self)
+            white_pawn_row = 1
+            for white_pawn_col in range(BOARD_DIMENSION):
+                self.board[1][white_pawn_col] = Pawn(
+                    row=white_pawn_row, col=white_pawn_col, is_black_piece=False, chess_board=self)
 
     def get_piece(self, row: int, col: int) -> ChessPiece:
         """Get a chess piece on the board
@@ -97,10 +98,10 @@ class ChessBoard:
         """
         piece = self.get_piece(org_row, org_col)
         if piece is not None and self.is_in_range(dest_row, dest_col):
-            piece.set_location(dest_row, dest_col)
+            piece.move(dest_row, dest_col)
 
-            # Remove the piece from the org position
-            self.remove_piece(org_row, org_col)
+            # Remove the piece from the org position and unlink this board so that it can get garbage collected
+            self.remove_piece(org_row, org_col).chess_board = None
 
             # Set destination position to be that removed piece
             self.set_piece(dest_row, dest_col, piece)
@@ -117,6 +118,11 @@ class ChessBoard:
                     entry.__str__() if entry is not None else "  ")
             board.append(board_row)
         return board
+
+    def clear_board(self):
+        for row in range(BOARD_DIMENSION):
+            for col in range(BOARD_DIMENSION):
+                self.board[row][col] = None
 
     def is_in_range(_, row: int, col: int) -> bool:
         """ Find out if the position is inside the chessboard

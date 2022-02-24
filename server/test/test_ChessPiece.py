@@ -6,11 +6,11 @@ def test_get_possible_moves(chesspiece: ChessPiece):
     assert chesspiece.get_possible_moves() == []
 
 
-def test_set_location(chesspiece: ChessPiece):
+def test_move(chesspiece: ChessPiece):
     # doesn't matter if the location oob or not
     for row in range(-100, 100):
         for col in range(-100, 100):
-            chesspiece.set_location(row, col)
+            chesspiece.move(row, col)
             assert chesspiece.row == row and chesspiece.col == col
     chesspiece.row = 0
     chesspiece.col = 0

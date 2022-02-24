@@ -6,6 +6,10 @@ class Pawn(ChessPiece):
         super().__init__("p", row, col, is_black_piece, chess_board)
         self.is_first_move = True
 
+    def move(self, dest_row: int, dest_col: int):
+        super().move(dest_row, dest_col)
+        self.is_first_move = False
+
     def get_possible_moves(self) -> list:
         attack_moves = None
         non_attack_moves = None

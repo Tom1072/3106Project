@@ -106,3 +106,9 @@ def test_is_in_range(chessboard: ChessBoard):
     oob_positions = [(-1, -1), (8, 8), (-1, 0), (0, -1)]
     for (row, col) in oob_positions:
         assert chessboard.is_in_range(row, col) is False
+
+def test_clear_board(chessboard: ChessBoard):
+    chessboard.clear_board()
+    for row in chessboard.board:
+        for entry in row:
+            assert entry is None

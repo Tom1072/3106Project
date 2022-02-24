@@ -12,7 +12,7 @@ class ChessPiece:
     def get_possible_moves(self) -> list:
         return []
 
-    def set_location(self, dest_row: int, dest_col: int):
+    def move(self, dest_row: int, dest_col: int):
         """Set location of this chess piece
         """
         self.row, self.col = dest_row, dest_col
@@ -37,5 +37,8 @@ class ChessPiece:
         else:
             return False
 
+    def is_blocked_by_ally(self, row: int, col: int) -> bool:
+        pass
+        
     def __str__(self):
         return ("b" if self.is_black_piece else "w") + self.id
