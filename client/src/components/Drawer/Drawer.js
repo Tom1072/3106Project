@@ -45,6 +45,7 @@ const Drawer = ({ handleStart, handleStop, started, yourTurn, shuffleBoard }) =>
         className="button"
         variant="warning"
         onClick={shuffleBoard}
+        disabled={started}
       >
         Shuffle Board
       </Button>
