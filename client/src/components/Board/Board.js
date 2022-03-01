@@ -3,8 +3,9 @@ import { PIECES_SVG } from "../../assets/pieces";
 import { fetchAPI } from "../../services/api";
 import "./Board.css";
 
-const Board = ({ board, disabled, switchTurn, choosingPiece, choosePiece, move }) => {
+const Board = ({ board, disabled, switchTurn, choosePiece, move }) => {
   const [validMoves, setValidMoves] = useState([]);
+  const [choosingPiece, setChoosingPiece] = useState(true);
   const [prevPosition, setPrevposition] = useState(null);
 
   /**
@@ -35,20 +36,29 @@ const Board = ({ board, disabled, switchTurn, choosingPiece, choosePiece, move }
     setPrevposition({ row, col });
     const availableMoves = await choosePiece(row, col);
     setValidMoves(availableMoves)
+
+    if (availableMoves.length > 0) {
+      setChoosingPiece(false);
+    } else {
+      console.log("No available moves.")
+    }
   };
 
   const handleMove = async (row, col, valid) => {
-    if (!valid || !prevPosition) return;
+    setChoosingPiece(true);
+    setValidMoves([]);
+
+    if (!valid || !prevPosition) {
+      return;
+    };
 
     move(row, col, prevPosition.row, prevPosition.col);
     console.log(`Move at (${row}, ${col})`);
-    switchTurn();
+    // switchTurn();
 
-    const opponentMove = await fetchAPI("/move", "GET", { row, col });
-    console.log("Opponent: " + opponentMove)
-    switchTurn();
-
-    setValidMoves([]);
+    // const opponentMove = await fetchAPI("/move", "GET", { row, col });
+    // console.log("Opponent: " + opponentMove)
+    // switchTurn();
     setPrevposition(null);
   };
 

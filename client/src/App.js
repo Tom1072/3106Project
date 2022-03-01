@@ -13,7 +13,6 @@ function App() {
   const [yourTurn, setYourTurn] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [youWin, setYouWin] = useState(true);
-  const [choosingPiece, setChoosingPiece] = useState(true);
 
   const handleStartGame = (algorithm) => {
     console.log(`Starting with ${algorithm} algorithm`);
@@ -25,20 +24,18 @@ function App() {
     setGameStarted(false);
     setYourTurn(true);
     setBoard(initBoard());
-    setChoosingPiece(true);
   };
 
   const handleChoosePiece = async (row, col) => {
     try {
       const data = await fetchAPI("/move", "GET", { row, col });
-      setChoosingPiece(false);
       return data.availablePositions;
     } catch (err) {
       console.log(err);
     }
   };
 
-  const handleMove = (row, col, prevRow, prevCol) => {
+  const move = (row, col, prevRow, prevCol) => {
     const newBoard = board;
     newBoard[row][col] = newBoard[prevRow][prevCol];
     newBoard[prevRow][prevCol] = null;
@@ -59,11 +56,10 @@ function App() {
         />
         <Board
           board={board}
-          switchTurn={() => setYourTurn(!yourTurn)}
+          switchTurn={() => {setYourTurn(!yourTurn); console.log("Switched: " + yourTurn);}}
           disabled={!(gameStarted && yourTurn)}
-          choosingPiece={choosingPiece}
           choosePiece={handleChoosePiece}
-          move={handleMove}
+          move={move}
         />
         <Modal
           className={youWin ? "win-modal" : "lose-modal"}
