@@ -28,6 +28,11 @@ function App() {
   };
 
   const handleChoosePiece = (r, c) => {
+    // const config = {
+    //   method: "get",
+    //   url: process.env.
+    // }
+    console.log(process.env.REACT_APP_SERVER_URL);
     setChoosingPiece(false);
   };
 

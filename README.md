@@ -28,10 +28,16 @@ _**All must be done in the `/server` directory**_
     Different platform: [see docs](https://flask-socketio.readthedocs.io/en/latest/)
 
 3. Install dependencies: `pip install -r requirements.txt`
-4. Export flask app env variable: 
+4. Export flask app env variable:
 
     Linux/Mac: `export FLASK_APP=server FLASK_ENV=development`
 
     Windows: `SET FLASK_APP=server | FLASK_ENV=development`
 
 5. Run server: `flask run`
+
+## Client workflow
+_**All must be done in the `/client` directory**_
+1. Install `npm` packages: `npm install`
+2. Export server's URL: `export REACT_APP_SERVER_URL=http://localhost:5000/`
+3. Start the server: `npm start`
