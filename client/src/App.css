@@ -1,0 +1,17 @@
+.body {
+  display: inline;
+  height: 100%; 
+  display: flex;
+}
+
+.lose-modal .modal-content {
+  background-color: rgb(233, 85, 66);
+  color: white;
+  font-size: 100px;
+}
+
+.win-modal .modal-content {
+  background-color: rgb(56, 173, 85);
+  color: white;
+  font-size: 100px;
+}

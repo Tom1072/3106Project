@@ -2,14 +2,14 @@ from flask import Blueprint, request
 from app.chess_board import ChessBoard
 
 routes = Blueprint("routes", __name__)
-chess_board = ChessBoard()
+chess_board = ChessBoard(is_god_board=True)
 
 
-@routes.route('/api/move', methods=['GET', 'POST'])
+@routes.route('/move', methods=['GET', 'POST'])
 def handle_get_move():
+    print(request)
     if request.method == 'GET':
-        row, col = request.json["position"]["row"], request.json["position"]["col"]
-
+        row, col = int(request.args.get("row")), int(request.args.get("col"))
         possible_moves = chess_board.get_possible_moves(row, col)
         response_payload = {
             "availablePositions": possible_moves,
@@ -18,22 +18,24 @@ def handle_get_move():
         return response_payload
 
     elif request.method == 'POST':
-        org_post = request.json["move"]["prev"]
-        dest_post = request.json["move"]["next"]
+        org_post = request.json["prev"]
+        dest_post = request.json["next"]
         org_row, org_col = org_post["row"], org_post["col"]
         dest_row, dest_col = dest_post["row"], dest_post["col"]
 
         response_payload = {}
-        if chess_board.move(org_row, org_col, org_row, org_col):
-            response_payload["move"] = {
+        if chess_board.move(org_row, org_col, dest_row, dest_col):
+            response_payload = {
                 "prev": {"row": org_row, "col": org_col},
-                "next": {"row": dest_row, "col": dest_col}
+                "next": {"row": dest_row, "col": dest_col},
+                "board": chess_board.get_board()
             }
         else:
             # No change
-            response_payload["move"] = {
+            response_payload = {
                 "prev": {"row": org_row, "col": org_col},
-                "next": {"row": org_row, "col": org_col}
+                "next": {"row": org_row, "col": org_col},
+                "board": chess_board.get_board()
             }
 
         return response_payload

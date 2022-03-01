@@ -1,24 +1,31 @@
 from app.chess_board.Pawn import Pawn
+from app.chess_board.GodPiece import GodPiece
 from app.chess_board.ChessPiece import ChessPiece
 
 BOARD_DIMENSION = 8
 
-
 class ChessBoard:
-    def __init__(self, is_blank_board: bool = False):
+    def __init__(self, is_blank_board: bool = False, is_god_board: bool = False):
         self.board = [[None for _ in range(BOARD_DIMENSION)]
                       for _ in range(BOARD_DIMENSION)]
 
         if not is_blank_board:
-            black_pawn_row = 6
-            for black_pawn_col in range(BOARD_DIMENSION):
-                self.board[6][black_pawn_col] = Pawn(
-                    row=black_pawn_row, col=black_pawn_col, is_black_piece=True, chess_board=self)
+            if not is_god_board:
+                black_pawn_row = 6
+                for black_pawn_col in range(BOARD_DIMENSION):
+                    self.board[black_pawn_row][black_pawn_col] = Pawn(
+                        row=black_pawn_row, col=black_pawn_col, is_black_piece=True, chess_board=self)
 
-            white_pawn_row = 1
-            for white_pawn_col in range(BOARD_DIMENSION):
-                self.board[1][white_pawn_col] = Pawn(
-                    row=white_pawn_row, col=white_pawn_col, is_black_piece=False, chess_board=self)
+                white_pawn_row = 1
+                for white_pawn_col in range(BOARD_DIMENSION):
+                    self.board[white_pawn_row][white_pawn_col] = Pawn(
+                        row=white_pawn_row, col=white_pawn_col, is_black_piece=False, chess_board=self)
+            else:
+                god_piece_row = ((0, True), (1, True), (6, False), (7, False))
+                for row, is_black_piece in god_piece_row:
+                    for col in range(BOARD_DIMENSION):
+                        self.board[row][col] = GodPiece(
+                            row=row, col=col, is_black_piece=is_black_piece, chess_board=self)
 
     def get_piece(self, row: int, col: int) -> ChessPiece:
         """Get a chess piece on the board

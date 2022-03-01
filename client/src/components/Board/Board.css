@@ -1,0 +1,66 @@
+:root {
+  --cell-size: calc(4vh + 4vw);
+  --min-cell-size: 50px;
+  --max-cell-size: 100px;
+  --cell-border: 1px;
+  --min-board-size: calc((var(--min-cell-size) + var(--cell-border)) * 8 - var(--board-border));
+  --max-board-size: calc((var(--max-cell-size) + var(--cell-border)) * 8 - var(--board-border));
+  --board-border: 3px;
+  --board-size: calc((var(--cell-size) + var(--cell-border)) * 8 - var(--board-border));
+}
+
+.board-cell {
+  min-width: var(--min-cell-size);
+  min-height: var(--min-cell-size);
+  max-width: var(--max-cell-size);
+  max-height: var(--max-cell-size);
+  width: var(--cell-size);
+  height: var(--cell-size);
+  border: var(--cell-border) solid black;
+}
+
+.board-container {
+  display: flex;
+  flex: 1;
+}
+
+.board {
+  margin: auto;
+  min-width: var(--min-board-size);
+  min-height: var(--min-board-size);
+  max-width: var(--max-board-size);
+  max-height: var(--max-board-size);
+  width: var(--board-size);
+  height: var(--board-size);
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  border: var(--board-border) solid black;
+  user-select: none;
+}
+
+.board img {
+  width: 100%;
+  height: 100%;
+}
+
+.available-piece:hover {
+  background: rgb(255, 243, 68);
+  cursor: pointer;
+}
+
+.valid-move {
+  background: rgb(32, 221, 133);
+  cursor: pointer;
+}
+
+.valid-move:hover {
+  background: rgb(28, 197, 118);
+}
+
+.colored-cell {
+  background: #bdbdbd;
+}
+
+.disabled {
+  pointer-events: none;
+}

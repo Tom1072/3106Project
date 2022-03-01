@@ -1,0 +1,22 @@
+.drawer {
+  display: flex;
+  flex-direction: column;
+
+  padding: 15px;
+  width: 300px;
+  min-width: 220px;
+  box-shadow: rgba(0, 0, 0, 0.15) 1px 3px 3px 0px;
+}
+
+.drawer > form > * {
+  margin-top: 15px;
+}
+
+.button {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.turn-status {
+  height: 150px;
+}
