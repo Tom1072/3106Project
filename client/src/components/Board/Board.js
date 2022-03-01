@@ -15,7 +15,7 @@ const Board = ({ board, disabled, setYourTurn, choosePiece, move }) => {
    * @param {number} column_index Index of the column
    * @returns {string} The class name
    */
-  const getCellClass = (cell_piece, row_index, column_index, valid=false) => {
+  const getCellClass = (cell_piece, row_index, column_index, valid = false) => {
     let className = `board-cell ${
       valid || (row_index + column_index) & 1 ? "" : "colored-cell"
     }`;
@@ -34,12 +34,12 @@ const Board = ({ board, disabled, setYourTurn, choosePiece, move }) => {
 
     setPrevPosition({ row, col });
     const availableMoves = await choosePiece(row, col);
-    setValidMoves(availableMoves)
+    setValidMoves(availableMoves);
 
     if (availableMoves.length > 0) {
       setChoosingPiece(false);
     } else {
-      console.log("No available moves.")
+      console.log("No available moves.");
     }
   };
 
@@ -49,20 +49,27 @@ const Board = ({ board, disabled, setYourTurn, choosePiece, move }) => {
 
     if (!valid || !prevPosition) {
       return;
-    };
+    }
 
     move(row, col, prevPosition.row, prevPosition.col);
     console.log(`Move at (${row}, ${col})`);
     setYourTurn(false);
 
-    const opponentMoves = await fetchAPI("/move", "GET", { row, col });
-    console.log("Opponent: " + opponentMoves)
+    const opponentMoves = await fetchAPI("/move", "POST", {
+      prev: prevPosition,
+      next: { row, col },
+    });
+    console.log("Opponent: " + opponentMoves);
+
     setYourTurn(true);
     setPrevPosition(null);
   };
 
   const isMoveValid = (row, col) => {
-    return validMoves.filter((move) => move.row === row && move.col === col).length > 0;
+    return (
+      validMoves.filter((move) => move.row === row && move.col === col).length >
+      0
+    );
   };
 
   const renderCell = (row, col, piece) => {
