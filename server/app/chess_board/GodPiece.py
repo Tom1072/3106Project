@@ -10,7 +10,7 @@ class GodPiece(ChessPiece):
         possible_moves = []
         for row in range(8):
             for col in range(8):
-                if row != self.row and col != self.col and not self.is_occupied_by_ally(row, col):
+                if (row != self.row or col != self.col) and not self.is_occupied_by_ally(row, col):
                     possible_moves.append({"row": row, "col": col})
         return possible_moves
 

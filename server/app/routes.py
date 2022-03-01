@@ -17,20 +17,20 @@ def handle_get_move():
         return response_payload
 
     elif request.method == 'POST':
-        org_post = request.json["move"]["prev"]
-        dest_post = request.json["move"]["next"]
+        org_post = request.json["prev"]
+        dest_post = request.json["next"]
         org_row, org_col = org_post["row"], org_post["col"]
         dest_row, dest_col = dest_post["row"], dest_post["col"]
 
         response_payload = {}
         if chess_board.move(org_row, org_col, org_row, org_col):
-            response_payload["move"] = {
+            response_payload = {
                 "prev": {"row": org_row, "col": org_col},
                 "next": {"row": dest_row, "col": dest_col}
             }
         else:
             # No change
-            response_payload["move"] = {
+            response_payload = {
                 "prev": {"row": org_row, "col": org_col},
                 "next": {"row": org_row, "col": org_col}
             }
