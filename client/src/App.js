@@ -31,13 +31,22 @@ function App() {
   const handleChoosePiece = (r, c) => {
     const config = {
       method: "get",
-      url: process.env.REACT_APP_SERVER_URL,
-    }
-    
-    axios(config)
-      .then(res => {
-        console.log(res);
-      });
+      url: `${process.env.REACT_APP_SERVER_URL}/move`,
+      data: JSON.stringify({
+        position: {
+          row: r,
+          col: c,
+        },
+      }),
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+      },
+    };
+
+    axios(config).then((res) => {
+      console.log(res);
+    });
     setChoosingPiece(false);
   };
 

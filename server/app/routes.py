@@ -5,8 +5,10 @@ routes = Blueprint("routes", __name__)
 chess_board = ChessBoard()
 
 
-@routes.route('/api/move', methods=['GET', 'POST'])
+@routes.route('/move', methods=['GET', 'POST'])
 def handle_get_move():
+    print("REQUEST:", request.json)
+    return "Requested"
     if request.method == 'GET':
         row, col = request.json["position"]["row"], request.json["position"]["col"]
 
