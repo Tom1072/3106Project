@@ -3,7 +3,7 @@ Full-stack Chess Game with AI integration.
 
 ## Team members
 
-- Tom Lam (#)
+- Tom Lam (101114541)
 - Tom Mai (#)
 - Minh Thang Cao (101147025)
 

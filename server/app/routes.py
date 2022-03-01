@@ -2,7 +2,7 @@ from flask import Blueprint, request
 from app.chess_board import ChessBoard
 
 routes = Blueprint("routes", __name__)
-chess_board = ChessBoard()
+chess_board = ChessBoard(is_god_board=True)
 
 
 @routes.route('/move', methods=['GET', 'POST'])
