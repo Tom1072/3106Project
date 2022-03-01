@@ -4,6 +4,7 @@ import Board from "./components/Board/Board";
 import Drawer from "./components/Drawer/Drawer";
 import { Modal, Button } from "react-bootstrap";
 import { initBoard, shuffleBoard } from "./utils/utilFunctions";
+import axios from "axios";
 import "./App.css";
 
 function App() {
@@ -28,11 +29,15 @@ function App() {
   };
 
   const handleChoosePiece = (r, c) => {
-    // const config = {
-    //   method: "get",
-    //   url: process.env.
-    // }
-    console.log(process.env.REACT_APP_SERVER_URL);
+    const config = {
+      method: "get",
+      url: process.env.REACT_APP_SERVER_URL,
+    }
+    
+    axios(config)
+      .then(res => {
+        console.log(res);
+      });
     setChoosingPiece(false);
   };
 
