@@ -7,11 +7,8 @@ chess_board = ChessBoard()
 
 @routes.route('/move', methods=['GET', 'POST'])
 def handle_get_move():
-    print("REQUEST:", request.json)
-    return "Requested"
     if request.method == 'GET':
-        row, col = request.json["position"]["row"], request.json["position"]["col"]
-
+        row, col = int(request.args.get("row")), int(request.args.get("col"))
         possible_moves = chess_board.get_possible_moves(row, col)
         response_payload = {
             "availablePositions": possible_moves,

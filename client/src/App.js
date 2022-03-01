@@ -32,12 +32,10 @@ function App() {
     const config = {
       method: "get",
       url: `${process.env.REACT_APP_SERVER_URL}/move`,
-      data: JSON.stringify({
-        position: {
-          row: r,
-          col: c,
-        },
-      }),
+      params: {
+        row: r,
+        col: c,
+      },
       headers: {
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
