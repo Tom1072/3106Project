@@ -56,7 +56,7 @@ function App() {
         />
         <Board
           board={board}
-          switchTurn={() => {setYourTurn(!yourTurn); console.log("Switched: " + yourTurn);}}
+          setYourTurn={setYourTurn}
           disabled={!(gameStarted && yourTurn)}
           choosePiece={handleChoosePiece}
           move={move}

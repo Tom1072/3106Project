@@ -3,10 +3,10 @@ import { PIECES_SVG } from "../../assets/pieces";
 import { fetchAPI } from "../../services/api";
 import "./Board.css";
 
-const Board = ({ board, disabled, switchTurn, choosePiece, move }) => {
+const Board = ({ board, disabled, setYourTurn, choosePiece, move }) => {
   const [validMoves, setValidMoves] = useState([]);
   const [choosingPiece, setChoosingPiece] = useState(true);
-  const [prevPosition, setPrevposition] = useState(null);
+  const [prevPosition, setPrevPosition] = useState(null);
 
   /**
    * Get the class name of a cell to add interaction according to the cell's piece.
@@ -32,8 +32,7 @@ const Board = ({ board, disabled, switchTurn, choosePiece, move }) => {
   const handleChoosePiece = async (row, col, pieceCode) => {
     if (!pieceCode) return;
 
-    // console.log(pieceCode + " chose!");
-    setPrevposition({ row, col });
+    setPrevPosition({ row, col });
     const availableMoves = await choosePiece(row, col);
     setValidMoves(availableMoves)
 
@@ -54,12 +53,12 @@ const Board = ({ board, disabled, switchTurn, choosePiece, move }) => {
 
     move(row, col, prevPosition.row, prevPosition.col);
     console.log(`Move at (${row}, ${col})`);
-    // switchTurn();
+    setYourTurn(false);
 
-    // const opponentMove = await fetchAPI("/move", "GET", { row, col });
-    // console.log("Opponent: " + opponentMove)
-    // switchTurn();
-    setPrevposition(null);
+    const opponentMoves = await fetchAPI("/move", "GET", { row, col });
+    console.log("Opponent: " + opponentMoves)
+    setYourTurn(true);
+    setPrevPosition(null);
   };
 
   const isMoveValid = (row, col) => {
