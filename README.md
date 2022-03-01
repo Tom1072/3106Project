@@ -39,5 +39,10 @@ _**All must be done in the `/server` directory**_
 ## Client workflow
 _**All must be done in the `/client` directory**_
 1. Install `npm` packages: `npm install`
-2. Export server's URL: `export REACT_APP_SERVER_URL=http://localhost:5000/`
+2. Export server's URL: 
+
+    Linux/Mac: `export REACT_APP_SERVER_URL=http://localhost:5000/`
+
+    Windows: `SET REACT_APP_SERVER_URL=http://localhost:5000/`
+
 3. Start the server: `npm start`
