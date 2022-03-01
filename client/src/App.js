@@ -4,7 +4,7 @@ import Board from "./components/Board/Board";
 import Drawer from "./components/Drawer/Drawer";
 import { Modal, Button } from "react-bootstrap";
 import { initBoard, shuffleBoard } from "./utils/utilFunctions";
-import axios from "axios";
+import { fetchAPI } from "./services/api";
 import "./App.css";
 
 function App() {
@@ -28,25 +28,21 @@ function App() {
     setChoosingPiece(true);
   };
 
-  const handleChoosePiece = (r, c) => {
-    const config = {
-      method: "get",
-      url: `${process.env.REACT_APP_SERVER_URL}/move`,
-      params: {
-        row: r,
-        col: c,
-      },
-      headers: {
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-      },
-    };
-
-    axios(config).then((res) => {
-      console.log(res);
-    });
-    setChoosingPiece(false);
+  const handleChoosePiece = async (row, col) => {
+    try {
+      const data = await fetchAPI("/move", "GET", { row, col });
+      setChoosingPiece(false);
+      return data.availablePositions;
+    } catch (err) {
+      console.log(err);
+    }
   };
+
+  const handleMove = (row, col, prevRow, prevCol) => {
+    const newBoard = board;
+    newBoard[row][col] = newBoard[prevRow][prevCol];
+    newBoard[prevRow][prevCol] = null;
+  }
 
   const toggleModal = () => setShowModal(!showModal);
 
@@ -67,6 +63,7 @@ function App() {
           disabled={!(gameStarted && yourTurn)}
           choosingPiece={choosingPiece}
           choosePiece={handleChoosePiece}
+          move={handleMove}
         />
         <Modal
           className={youWin ? "win-modal" : "lose-modal"}

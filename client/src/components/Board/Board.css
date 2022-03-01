@@ -48,13 +48,17 @@
   cursor: pointer;
 }
 
-.available-move {
+.valid-move {
   background: rgb(32, 221, 133);
   cursor: pointer;
 }
 
+.valid-move:hover {
+  background: rgb(28, 197, 118);
+}
+
 .colored-cell {
-  background-color: #bdbdbd;
+  background: #bdbdbd;
 }
 
 .disabled {

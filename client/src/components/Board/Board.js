@@ -1,8 +1,12 @@
 import { useState } from "react";
 import { PIECES_SVG } from "../../assets/pieces";
+import { fetchAPI } from "../../services/api";
 import "./Board.css";
 
-const Board = ({ board, disabled, switchTurn, choosingPiece, choosePiece }) => {
+const Board = ({ board, disabled, switchTurn, choosingPiece, choosePiece, move }) => {
+  const [validMoves, setValidMoves] = useState([]);
+  const [prevPosition, setPrevposition] = useState(null);
+
   /**
    * Get the class name of a cell to add interaction according to the cell's piece.
    * @param {string | null} cell_piece Piece code to identify your own pieces
@@ -10,32 +14,64 @@ const Board = ({ board, disabled, switchTurn, choosingPiece, choosePiece }) => {
    * @param {number} column_index Index of the column
    * @returns {string} The class name
    */
-  const getCellClass = (cell_piece, row_index, column_index) => {
+  const getCellClass = (cell_piece, row_index, column_index, valid=false) => {
     let className = `board-cell ${
-      (row_index + column_index) & 1 ? "" : "colored-cell"
+      valid || (row_index + column_index) & 1 ? "" : "colored-cell"
     }`;
 
     if (choosingPiece && cell_piece && cell_piece.startsWith("w")) {
       className += " available-piece";
+    } else if (valid) {
+      className += " valid-move";
     }
 
     return className;
   };
 
-  const handleChoosePiece = (r, c, pieceCode) => {
-    if (!pieceCode)
-      return;
+  const handleChoosePiece = async (row, col, pieceCode) => {
+    if (!pieceCode) return;
 
-    console.log(pieceCode + " chose!");
-    choosePiece(r, c);
+    // console.log(pieceCode + " chose!");
+    setPrevposition({ row, col });
+    const availableMoves = await choosePiece(row, col);
+    setValidMoves(availableMoves)
   };
 
-  const handleMove = (r, c, valid) => {
-    if (!valid)
-      return;
+  const handleMove = async (row, col, valid) => {
+    if (!valid || !prevPosition) return;
 
-    console.log(`Move at (${r}, ${c})`);
+    move(row, col, prevPosition.row, prevPosition.col);
+    console.log(`Move at (${row}, ${col})`);
     switchTurn();
+
+    const opponentMove = await fetchAPI("/move", "GET", { row, col });
+    console.log("Opponent: " + opponentMove)
+    switchTurn();
+
+    setValidMoves([]);
+    setPrevposition(null);
+  };
+
+  const isMoveValid = (row, col) => {
+    return validMoves.filter((move) => move.row === row && move.col === col).length > 0;
+  };
+
+  const renderCell = (row, col, piece) => {
+    const valid = isMoveValid(row, col);
+
+    return (
+      <div
+        key={`${row}${col}`}
+        className={getCellClass(piece, row, col, valid)}
+        onClick={() =>
+          choosingPiece
+            ? handleChoosePiece(row, col, piece)
+            : handleMove(row, col, valid)
+        }
+      >
+        {PIECES_SVG[piece]}
+      </div>
+    );
   };
 
   /**
@@ -46,19 +82,7 @@ const Board = ({ board, disabled, switchTurn, choosingPiece, choosePiece }) => {
     return (
       <>
         {board.map((row, r_index) =>
-          row.map((cell, c_index) => (
-            <div
-              key={`${r_index}${c_index}`}
-              className={getCellClass(cell, r_index, c_index)}
-              onClick={() =>
-                choosingPiece
-                  ? handleChoosePiece(r_index, c_index, cell)
-                  : handleMove(r_index, c_index, true)
-              }
-            >
-              {PIECES_SVG[cell]}
-            </div>
-          ))
+          row.map((piece, c_index) => renderCell(r_index, c_index, piece))
         )}
       </>
     );
