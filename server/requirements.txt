@@ -2,3 +2,4 @@ flask
 python-dotenv
 pytest
 flask-cors
+chess
