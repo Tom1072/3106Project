@@ -1,9 +1,7 @@
 from flask import Blueprint, request
-from app.chess_board import ChessBoard
 from app.ChessService import ChessService
 
 routes = Blueprint("routes", __name__)
-chess_board = ChessBoard(is_god_board=True)
 chess_service = ChessService()
 
 
@@ -32,14 +30,12 @@ def handle_get_move():
             response_payload = {
                 "prev": {"row": org_row, "col": org_col},
                 "next": {"row": dest_row, "col": dest_col},
-                "board": chess_board.get_board()
             }
         else:
             # No change
             response_payload = {
                 "prev": {"row": org_row, "col": org_col},
                 "next": {"row": org_row, "col": org_col},
-                "board": chess_board.get_board()
             }
 
         return response_payload
