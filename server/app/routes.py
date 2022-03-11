@@ -30,12 +30,30 @@ def handle_get_move():
             response_payload = {
                 "prev": {"row": org_row, "col": org_col},
                 "next": {"row": dest_row, "col": dest_col},
+                "board": chess_service.get_board(),
+                "is_black_turn": chess_service.is_black_turn(),
+                "outcome": chess_service.get_game_outcome()
             }
         else:
             # No change
             response_payload = {
                 "prev": {"row": org_row, "col": org_col},
                 "next": {"row": org_row, "col": org_col},
+                "board": chess_service.get_board(),
+                "is_black_turn": chess_service.is_black_turn(),
+                "outcome": chess_service.get_game_outcome()
             }
 
+        print(response_payload)
         return response_payload
+
+@routes.route('/reset', methods=['POST'])
+def handle_reset():
+    print(request)
+    chess_service.reset()
+    response_payload = {
+        "board": chess_service.get_board(),
+        "is_black_turn": chess_service.is_black_turn(),
+        "outcome": chess_service.get_game_outcome()
+    }
+    return response_payload

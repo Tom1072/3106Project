@@ -19,13 +19,13 @@ export const PIECES_SVG = {
   bp: getImg(BlackPawn, "Black Pawn"),
   bk: getImg(BlackKing, "Black King"),
   bq: getImg(BlackQueen, "Black Queen"),
-  bkt: getImg(BlackKnight, "Black Knight"),
+  bn: getImg(BlackKnight, "Black Knight"),
   bb: getImg(BlackBishop, "Black Bishop"),
   br: getImg(BlackRook, "Black Rook"),
   wp: getImg(WhitePawn, "White Pawn"),
   wk: getImg(WhiteKing, "White King"),
   wq: getImg(WhiteQueen, "White Queen"),
-  wkt: getImg(WhiteKnight, "White Knight"),
+  wn: getImg(WhiteKnight, "White Knight"),
   wb: getImg(WhiteBishop, "White Bishop"),
   wr: getImg(WhiteRook, "White Rook")
 }
