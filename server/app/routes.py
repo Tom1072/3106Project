@@ -1,8 +1,10 @@
 from flask import Blueprint, request
 from app.chess_board import ChessBoard
+from app.ChessService import ChessService
 
 routes = Blueprint("routes", __name__)
 chess_board = ChessBoard(is_god_board=True)
+chess_service = ChessService()
 
 
 @routes.route('/move', methods=['GET', 'POST'])
@@ -10,7 +12,8 @@ def handle_get_move():
     print(request)
     if request.method == 'GET':
         row, col = int(request.args.get("row")), int(request.args.get("col"))
-        possible_moves = chess_board.get_possible_moves(row, col)
+        # possible_moves = chess_board.get_possible_moves(row, col)
+        possible_moves = chess_service.get_possible_moves(row, col)
         response_payload = {
             "availablePositions": possible_moves,
         }
@@ -24,7 +27,8 @@ def handle_get_move():
         dest_row, dest_col = dest_post["row"], dest_post["col"]
 
         response_payload = {}
-        if chess_board.move(org_row, org_col, dest_row, dest_col):
+        # if chess_board.move(org_row, org_col, dest_row, dest_col):
+        if chess_service.move(org_row, org_col, dest_row, dest_col):
             response_payload = {
                 "prev": {"row": org_row, "col": org_col},
                 "next": {"row": dest_row, "col": dest_col},

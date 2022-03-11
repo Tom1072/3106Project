@@ -1,4 +1,5 @@
 from app.chess_board import ChessBoard, ChessPiece, Pawn, GodPiece
+from app.ChessService import ChessService
 import pytest
 
 
@@ -26,3 +27,7 @@ def god(chessboard) -> GodPiece:
     chessboard.clear_board()
     chessboard.board[0][0] = GodPiece
     return god_piece
+
+@pytest.fixture(scope="function")
+def chess_service() -> ChessService:
+    return ChessService()
