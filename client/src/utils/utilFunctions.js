@@ -6,11 +6,11 @@ export const initBoard = () => {
   const board = [];
 
   for (let i = 0; i < 8; i++) {
-    if (i === 0) board.push(["br", "bkt", "bb", "bq", "bk", "bb", "bkt", "br"]);
-    else if (i === 1) board.push(new Array(8).fill("bp"));
-    else if (i === 6) board.push(new Array(8).fill("wp"));
+    if (i === 0) board.push(["wr", "wn", "wb", "wq", "wk", "wb", "wn", "wr"]);
+    else if (i === 1) board.push(new Array(8).fill("wp"));
+    else if (i === 6) board.push(new Array(8).fill("bp"));
     else if (i === 7)
-      board.push(["wr", "wkt", "wb", "wq", "wk", "wb", "wkt", "wr"]);
+      board.push(["br", "bn", "bb", "bq", "bk", "bb", "bn", "br"]);
     else board.push(new Array(8).fill(null));
   }
 

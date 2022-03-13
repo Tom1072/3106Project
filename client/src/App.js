@@ -15,12 +15,14 @@ function App() {
   const [youWin, setYouWin] = useState(true);
 
   const handleStartGame = (algorithm) => {
+    reset()
     console.log(`Starting with ${algorithm} algorithm`);
     setGameStarted(true);
   };
 
   const handleStopGame = () => {
     console.log("Game stopped");
+    reset()
     setGameStarted(false);
     setYourTurn(true);
     setBoard(initBoard());
@@ -39,6 +41,14 @@ function App() {
     const newBoard = board;
     newBoard[row][col] = newBoard[prevRow][prevCol];
     newBoard[prevRow][prevCol] = null;
+  }
+
+  const reset = () => {
+    try {
+      fetchAPI("/reset", "POST", {});
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   const toggleModal = () => setShowModal(!showModal);

@@ -7,11 +7,24 @@ def test_get_possible_moves(chess_service: ChessService):
     assert chess_service.get_possible_moves(1, 1) == [{"row": 2, "col": 1}, {"row": 3, "col": 1}]
 
 
-def test_move(chess_service: ChessService):
+def test_move_and_reset(chess_service: ChessService):
+    expected_board = [
+        ["wr", "wn", "wb", "wq", "wk", "wb", "wn", "wr"],
+        ["wp", "wp", "wp", "wp", "wp", "wp", "wp", "wp"],
+        ["", "", "", "", "", "", "", ""],
+        ["", "", "", "", "", "", "", ""],
+        ["", "", "", "", "", "", "", ""],
+        ["", "", "", "", "", "", "", ""],
+        ["bp", "bp", "bp", "bp", "bp", "bp", "bp", "bp"],
+        ["br", "bn", "bb", "bq", "bk", "bb", "bn", "br"]
+    ]
+    
     assert chess_service.move(0, 1, 2, 0) is True
     chess_service.reset()
+    assert chess_service.get_board() == expected_board
     assert chess_service.move(0, 1, 2, 2) is True
     chess_service.reset()
+    assert chess_service.get_board() == expected_board
     assert chess_service.move(0, 1, 2, 1) is False
 
 def test_convert_to_row_col(chess_service: ChessService):
@@ -46,3 +59,30 @@ def test_convert_to_square(chess_service: ChessService):
         for col in range(len(expected_board[row])):
             assert chess_service._convert_to_square(
                 row, col) == expected_board[row][col]
+
+
+def test_get_board(chess_service: ChessService):
+    expected_board = [
+        ["wr", "wn", "wb", "wq", "wk", "wb", "wn", "wr"],
+        ["wp", "wp", "wp", "wp", "wp", "wp", "wp", "wp"],
+        ["", "", "", "", "", "", "", ""],
+        ["", "", "", "", "", "", "", ""],
+        ["", "", "", "", "", "", "", ""],
+        ["", "", "", "", "", "", "", ""],
+        ["bp", "bp", "bp", "bp", "bp", "bp", "bp", "bp"],
+        ["br", "bn", "bb", "bq", "bk", "bb", "bn", "br"]
+    ]
+    assert chess_service.get_board() == expected_board
+
+
+def test_is_black_turn(chess_service: ChessService):
+    assert chess_service.is_black_turn() is False
+    assert chess_service.move(0, 1, 2, 0) is True
+    assert chess_service.is_black_turn() is True
+
+def test_game_outcome(chess_service: ChessService):
+    assert chess_service.get_game_outcome() == "None"
+    # TODO: Test other outcome
+
+
+    
