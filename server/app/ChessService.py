@@ -87,6 +87,8 @@ class ChessService:
         outcome = self.board.outcome(claim_draw=False)
         if not outcome:
             return None
+        print("Winner", outcome.winner)
+        print("Result", outcome.result())
         return str(outcome.winner)
 
     def reset(self):
