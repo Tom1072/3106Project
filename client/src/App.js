@@ -6,6 +6,7 @@ import { Modal, Button } from "react-bootstrap";
 import { initBoard, shuffleBoard } from "./utils/utilFunctions";
 import { fetchAPI } from "./services/api";
 import "./App.css";
+import { Results } from "./assets/constants";
 
 function App() {
   const [gameStarted, setGameStarted] = useState(false);
@@ -54,17 +55,27 @@ function App() {
   const toggleModal = () => setShowModal(!showModal);
 
   const getOutcomeText = () => {
-    if (outcome === "white")
+    if (outcome === Results.WHITE)
       return "You win!";
-    else if (outcome === "black")
-      return "You win!";
+    else if (outcome === Results.BLACK)
+      return "You lose!";
 
     return "Tie!";
+  }
+
+  const getOutcomeClass = () => {
+    if (outcome === Results.WHITE)
+      return "win-modal";
+    else if (outcome === Results.BLACK)
+      return "lose-modal";
+
+    return "tie-modal";
   }
 
   const handleEndGame = (winner) => {
     setOutcome(winner);
     setGameStarted(false);
+    toggleModal();
   }
 
   return (
@@ -87,7 +98,7 @@ function App() {
           endGame={handleEndGame}
         />
         <Modal
-          className={outcome === "white" ? "win-modal" : "lose-modal"}
+          className={getOutcomeClass()}
           show={showModal}
           onHide={toggleModal}
         >

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { PIECES_SVG } from "../../assets/pieces";
+import { Results } from "../../assets/constants";
 import { fetchAPI } from "../../services/api";
 import "./Board.css";
 
@@ -63,7 +64,7 @@ const Board = ({ board, disabled, setYourTurn, choosePiece, move, endGame }) => 
     console.log(opponentMoves);
 
     if (opponentMoves.outcome)
-      endGame(opponentMoves.outcome);
+      endGame(Results[opponentMoves.outcome]);
 
     setYourTurn(true);
     setPrevPosition(null);
