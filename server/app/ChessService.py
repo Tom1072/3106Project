@@ -84,7 +84,10 @@ class ChessService:
         Returns:
             str: the outcome
         """
-        return str(self.board.outcome(claim_draw=False))
+        outcome = self.board.outcome(claim_draw=False)
+        if not outcome:
+            return None
+        return str(outcome.winner)
 
     def reset(self):
         """Reset the board to the orginal state (with all piece back to its starting position)

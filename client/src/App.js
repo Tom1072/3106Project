@@ -12,7 +12,7 @@ function App() {
   const [board, setBoard] = useState(initBoard());
   const [yourTurn, setYourTurn] = useState(true);
   const [showModal, setShowModal] = useState(false);
-  const [youWin, setYouWin] = useState(true);
+  const [outcome, setOutcome] = useState(null);
 
   const handleStartGame = (algorithm) => {
     reset()
@@ -53,6 +53,20 @@ function App() {
 
   const toggleModal = () => setShowModal(!showModal);
 
+  const getOutcomeText = () => {
+    if (outcome === "white")
+      return "You win!";
+    else if (outcome === "black")
+      return "You win!";
+
+    return "Tie!";
+  }
+
+  const handleEndGame = (winner) => {
+    setOutcome(winner);
+    setGameStarted(false);
+  }
+
   return (
     <>
       <InfoBar />
@@ -70,13 +84,14 @@ function App() {
           disabled={!(gameStarted && yourTurn)}
           choosePiece={handleChoosePiece}
           move={move}
+          endGame={handleEndGame}
         />
         <Modal
-          className={youWin ? "win-modal" : "lose-modal"}
+          className={outcome === "white" ? "win-modal" : "lose-modal"}
           show={showModal}
           onHide={toggleModal}
         >
-          <Modal.Header>{youWin ? "You win." : "You lose."}</Modal.Header>
+          <Modal.Header>{getOutcomeText()}</Modal.Header>
           <Modal.Footer>
             <Button variant="light" onClick={toggleModal}>
               Close
