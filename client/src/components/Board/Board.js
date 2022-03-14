@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { PIECES_SVG } from "../../assets/pieces";
+import { Results } from "../../assets/constants";
 import { fetchAPI } from "../../services/api";
 import "./Board.css";
 
-const Board = ({ board, disabled, setYourTurn, choosePiece, move }) => {
+const Board = ({ board, disabled, setYourTurn, choosePiece, move, endGame }) => {
   const [validMoves, setValidMoves] = useState([]);
   const [choosingPiece, setChoosingPiece] = useState(true);
   const [prevPosition, setPrevPosition] = useState(null);
@@ -30,7 +31,8 @@ const Board = ({ board, disabled, setYourTurn, choosePiece, move }) => {
   };
 
   const handleChoosePiece = async (row, col, pieceCode) => {
-    if (!pieceCode) return;
+    if (!pieceCode) return; // Change to next line after finishing AI
+    // if (!pieceCode || pieceCode[0] !== "w") return;
 
     setPrevPosition({ row, col });
     const availableMoves = await choosePiece(row, col);
@@ -59,7 +61,10 @@ const Board = ({ board, disabled, setYourTurn, choosePiece, move }) => {
       prev: prevPosition,
       next: { row, col },
     });
-    console.log("Opponent: " + opponentMoves);
+    console.log(opponentMoves);
+
+    if (opponentMoves.outcome)
+      endGame(Results[opponentMoves.outcome]);
 
     setYourTurn(true);
     setPrevPosition(null);
