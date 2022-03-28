@@ -2,9 +2,19 @@ import "./Drawer.css";
 import { Algorithms } from "../../assets/constants";
 import { Form, Button } from "react-bootstrap";
 import { useState } from "react";
+import { fetchAPI } from "../../services/api";
 
 const Drawer = ({ handleStart, handleStop, started, yourTurn }) => {
-  const [algorithm, setAlgorithm] = useState(Algorithms.MINIMAX);
+  const [algorithm, setAlgorithm] = useState(Algorithms.ALPHA_BETA);
+
+  const handleChangeAlgorithm = async (e) => {
+    try {
+      setAlgorithm(e.target.value);
+      await fetchAPI("/algorithm", "PUT", { algorithm: e.target.value })
+    } catch (err) {
+      console.log(err)
+    }
+  }
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -24,10 +34,10 @@ const Drawer = ({ handleStart, handleStop, started, yourTurn }) => {
           <Form.Select
             disabled={started}
             value={algorithm}
-            onChange={(e) => setAlgorithm(e.target.value)}
+            onChange={handleChangeAlgorithm}
           >
-            <option value={Algorithms.MINIMAX}>Minimax Search</option>
-            <option value={Algorithms.MONTE_CARLO}>Monte-Carlo Search</option>
+            <option value={Algorithms.ALPHA_BETA}>Alpha-Beta Search</option>
+            <option value={Algorithms.ALPHA_BETA_PRUNING}>Alpha-Beta Pruning Search</option>
           </Form.Select>
         </Form.Group>
 

@@ -74,10 +74,11 @@ def handle_reset():
         "is_black_turn": chess_service.is_black_turn(),
         "outcome": chess_service.get_game_outcome()
     }
+
     return response_payload
 
 @routes.route('/algorithm', methods=['PUT'])
 def handle_change_algorithm():
     algorithm = request.json["algorithm"]
     algorithm_service.switchAlgorithm(algorithm)
-    return
+    return "Algorithm Changed."
