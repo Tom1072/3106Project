@@ -2,7 +2,7 @@ import axios from "axios";
 
 const baseURL = process.env.REACT_APP_SERVER_URL;
 
-export const fetchAPI = async (endpoint, method, data) => {
+export const fetchAPI = async (endpoint, method, data = null) => {
   if (endpoint[0] !== "/") {
     endpoint = "/" + endpoint;
   }
@@ -16,10 +16,12 @@ export const fetchAPI = async (endpoint, method, data) => {
     },
   };
 
-  if (method.toUpperCase() === "GET") {
-    config.params = data;
-  } else if (method.toUpperCase() === "POST") {
-    config.data = data;
+  if (data) {
+    if (method.toUpperCase() === "GET") {
+      config.params = data;
+    } else if (method.toUpperCase() === "POST") {
+      config.data = data;
+    }
   }
 
   try {

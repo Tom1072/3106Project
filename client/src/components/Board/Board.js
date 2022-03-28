@@ -4,7 +4,7 @@ import { Results } from "../../assets/constants";
 import { fetchAPI } from "../../services/api";
 import "./Board.css";
 
-const Board = ({ board, disabled, setYourTurn, choosePiece, move, endGame }) => {
+const Board = ({ board, setBoard, disabled, setYourTurn, choosePiece, endGame }) => {
   const [validMoves, setValidMoves] = useState([]);
   const [choosingPiece, setChoosingPiece] = useState(true);
   const [prevPosition, setPrevPosition] = useState(null);
@@ -16,15 +16,18 @@ const Board = ({ board, disabled, setYourTurn, choosePiece, move, endGame }) => 
    * @param {number} column_index Index of the column
    * @returns {string} The class name
    */
-  const getCellClass = (cell_piece, row_index, column_index, valid = false) => {
-    let className = `board-cell ${
-      valid || (row_index + column_index) & 1 ? "" : "colored-cell"
-    }`;
+  const getCellClass = (cell_piece, row_index, column_index, valid = false, capture = false) => {
+    let className = `board-cell ${valid || (row_index + column_index) & 1 ? "" : "colored-cell"
+      }`;
 
     if (choosingPiece && cell_piece && cell_piece.startsWith("w")) {
       className += " available-piece";
     } else if (valid) {
-      className += " valid-move";
+      if (capture) {
+        className += " valid-move-capture"
+      } else {
+        className += " valid-move-no-capture";
+      }
     }
 
     return className;
@@ -53,20 +56,23 @@ const Board = ({ board, disabled, setYourTurn, choosePiece, move, endGame }) => 
       return;
     }
 
-    move(row, col, prevPosition.row, prevPosition.col);
-    console.log(`Move at (${row}, ${col})`);
+    console.log(`Attempt move at (${row}, ${col})`);
     setYourTurn(false);
 
-    const opponentMoves = await fetchAPI("/move", "POST", {
+    const response = await fetchAPI("/move", "POST", {
       prev: prevPosition,
       next: { row, col },
     });
-    console.log(opponentMoves);
+    console.log(response);
+    setBoard(response.board);
 
-    if (opponentMoves.outcome)
-      endGame(Results[opponentMoves.outcome]);
+    if (response.outcome)
+      endGame(Results[response.outcome]);
 
+    // TODO: enable this line after finishing AI
+    // setYourTurn(!opponentMoves.is_black_turn);
     setYourTurn(true);
+
     setPrevPosition(null);
   };
 
@@ -79,11 +85,12 @@ const Board = ({ board, disabled, setYourTurn, choosePiece, move, endGame }) => 
 
   const renderCell = (row, col, piece) => {
     const valid = isMoveValid(row, col);
+    const capture = piece && piece.startsWith("b");
 
     return (
       <div
         key={`${row}${col}`}
-        className={getCellClass(piece, row, col, valid)}
+        className={getCellClass(piece, row, col, valid, capture)}
         onClick={() =>
           choosingPiece
             ? handleChoosePiece(row, col, piece)
