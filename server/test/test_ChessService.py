@@ -1,6 +1,6 @@
 import pytest
 import chess
-from app.ChessService import ChessService, BOARD_DIMENSION
+from server.app.services.ChessService import ChessService, BOARD_DIMENSION
 
 
 def test_get_possible_moves(chess_service: ChessService):
