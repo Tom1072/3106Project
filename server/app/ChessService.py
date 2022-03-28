@@ -37,9 +37,10 @@ class ChessService:
         Returns:
             bool: true if the move is successful(legal), false otherwise
         """
+        new_move = self.board.find_move(
+            self._convert_to_square(org_row, org_col),
+            self._convert_to_square(dest_row, dest_col))
 
-        new_move = chess.Move(self._convert_to_square(
-            org_row, org_col), self._convert_to_square(dest_row, dest_col))
         if new_move in self.board.legal_moves:
             self.board.push(new_move)
             print(self.board)
