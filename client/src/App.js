@@ -18,7 +18,7 @@ function App() {
 
   useEffect(() => {
     const init = async () => {
-      const response = await fetchAPI("/reset", "POST", {});
+      const response = await fetchAPI("/reset", "POST");
       setBoard(response.board);
       setYourTurn(!response.is_black_turn) // You're a white piece
     };
