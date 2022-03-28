@@ -4,6 +4,8 @@ from app.ChessService import ChessService
 routes = Blueprint("routes", __name__)
 chess_service = ChessService()
 
+search_algorithm = None
+
 
 @routes.route('/move', methods=['GET', 'POST'])
 def handle_get_move():
