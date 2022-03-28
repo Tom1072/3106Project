@@ -3,30 +3,38 @@ import InfoBar from "./components/InfoBar/InfoBar";
 import Board from "./components/Board/Board";
 import Drawer from "./components/Drawer/Drawer";
 import { Modal, Button } from "react-bootstrap";
-import { initBoard, shuffleBoard } from "./utils/utilFunctions";
+import { shuffleBoard } from "./utils/utilFunctions";
 import { fetchAPI } from "./services/api";
 import "./App.css";
 import { Results } from "./assets/constants";
+import { useEffect } from "react";
 
 function App() {
   const [gameStarted, setGameStarted] = useState(false);
-  const [board, setBoard] = useState(initBoard());
+  const [board, setBoard] = useState([]);
   const [yourTurn, setYourTurn] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [outcome, setOutcome] = useState(null);
 
+  useEffect(() => {
+    const init = async () => {
+      const response = await fetchAPI("/reset", "POST", {});
+      setBoard(response.board);
+      setYourTurn(!response.is_black_turn) // You're a white piece
+    };
+
+    init();
+  }, [gameStarted]);
+
   const handleStartGame = (algorithm) => {
-    reset()
     console.log(`Starting with ${algorithm} algorithm`);
     setGameStarted(true);
   };
 
   const handleStopGame = () => {
     console.log("Game stopped");
-    reset()
     setGameStarted(false);
-    setYourTurn(true);
-    setBoard(initBoard());
+    // setYourTurn(true);
   };
 
   const handleChoosePiece = async (row, col) => {
@@ -38,19 +46,12 @@ function App() {
     }
   };
 
-  const move = (row, col, prevRow, prevCol) => {
-    const newBoard = board;
-    newBoard[row][col] = newBoard[prevRow][prevCol];
-    newBoard[prevRow][prevCol] = null;
-  }
+  // const move = (row, col, prevRow, prevCol) => {
+  //   const newBoard = board;
+  //   newBoard[row][col] = newBoard[prevRow][prevCol];
+  //   newBoard[prevRow][prevCol] = null;
+  // }
 
-  const reset = () => {
-    try {
-      fetchAPI("/reset", "POST", {});
-    } catch (err) {
-      console.log(err);
-    }
-  }
 
   const toggleModal = () => setShowModal(!showModal);
 
@@ -91,10 +92,10 @@ function App() {
         />
         <Board
           board={board}
+          setBoard={setBoard}
           setYourTurn={setYourTurn}
           disabled={!(gameStarted && yourTurn)}
           choosePiece={handleChoosePiece}
-          move={move}
           endGame={handleEndGame}
         />
         <Modal

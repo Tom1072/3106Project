@@ -72,10 +72,12 @@ class ChessService:
                 if (entry == "."):
                     board_ls[row][col] = ""
                 elif (entry.isupper()):
-                    board_ls[row][col] = "b" + entry.lower()
+                    board_ls[row][col] = "w" + entry.lower()
                 elif (entry.islower()):
-                    board_ls[row][col] = "w" + entry
+                    board_ls[row][col] = "b" + entry
 
+        # reverse for the frontend
+        board_ls.reverse()
         return board_ls
 
     def is_black_turn(self) -> bool:

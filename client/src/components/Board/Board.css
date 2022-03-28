@@ -48,8 +48,13 @@
   cursor: pointer;
 }
 
-.valid-move {
+.valid-move-no-capture {
   background: rgb(32, 221, 133);
+  cursor: pointer;
+}
+
+.valid-move-capture {
+  background: rgb(255, 91, 91);
   cursor: pointer;
 }
 
