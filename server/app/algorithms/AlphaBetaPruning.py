@@ -1,5 +1,8 @@
+from app.algorithms.SearchInterface import SearchInterface
+
 class AlphaBetaPruning(SearchInterface):
     def next_move(self, board, chess_service):
+        print("Alpha-Beta Pruning Moved")
         pass
 
     def minimaxRoot(depth, board,isMaximizing):

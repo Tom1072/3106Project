@@ -19,7 +19,7 @@ export const fetchAPI = async (endpoint, method, data = null) => {
   if (data) {
     if (method.toUpperCase() === "GET") {
       config.params = data;
-    } else if (method.toUpperCase() === "POST") {
+    } else if (["POST", "PUT"].includes(method.toUpperCase())) {
       config.data = data;
     }
   }

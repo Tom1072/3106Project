@@ -1,6 +1,6 @@
 export const Algorithms = {
-  MINIMAX: "minimax",
-  MONTE_CARLO: "monte-carlo"
+  ALPHA_BETA: "ab",
+  ALPHA_BETA_PRUNING: "abp"
 }
 
 export const Results = {

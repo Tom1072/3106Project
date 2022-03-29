@@ -1,10 +1,10 @@
 from flask import Blueprint, request
-from app.ChessService import ChessService
+from app.services.ChessService import ChessService
+from app.services.AlgorithmService import AlgorithmService 
 
 routes = Blueprint("routes", __name__)
 chess_service = ChessService()
-
-search_algorithm = None
+algorithm_service = AlgorithmService()
 
 
 @routes.route('/move', methods=['GET', 'POST'])
@@ -68,11 +68,17 @@ def handle_get_move():
 
 @routes.route('/reset', methods=['POST'])
 def handle_reset():
-    print(request)
     chess_service.reset()
     response_payload = {
         "board": chess_service.get_board(),
         "is_black_turn": chess_service.is_black_turn(),
         "outcome": chess_service.get_game_outcome()
     }
+
     return response_payload
+
+@routes.route('/algorithm', methods=['PUT'])
+def handle_change_algorithm():
+    algorithm = request.json["algorithm"]
+    algorithm_service.switchAlgorithm(algorithm)
+    return "Algorithm Changed."
