@@ -1,5 +1,5 @@
 from enum import Enum
 
 class Algorithms(Enum):
-  ALPHA_BETA = "ab"
+  MINIMAX = "minmax"
   ALPHA_BETA_PRUNING = "abp"
