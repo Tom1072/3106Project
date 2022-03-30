@@ -9,7 +9,7 @@ algorithm_service = AlgorithmService()
 
 @routes.route('/move', methods=['GET', 'POST'])
 def handle_get_move():
-    print(request)
+    # print(request)
     if request.method == 'GET':
         row, col = int(request.args.get("row")), int(request.args.get("col"))
         # possible_moves = chess_board.get_possible_moves(row, col)
@@ -30,7 +30,7 @@ def handle_get_move():
         # if chess_board.move(org_row, org_col, dest_row, dest_col):
         if chess_service.move(org_row, org_col, dest_row, dest_col):
             # keep track of the board after player makes a move
-            boardAfterMove = chess_service.get_board()
+            # boardAfterMove = chess_service.get_board()
             # computer turn using AI model
             """
                 comp_move = chess_service.minimaxRoot(3,board,True)
@@ -43,7 +43,6 @@ def handle_get_move():
                 chess_service.move(org_comp_row, org_comp_col, dest_comp_row, dest_comp_col)
                 
             """
-
             response_payload = {
                 "prev": {"row": org_row, "col": org_col},
                 "next": {"row": dest_row, "col": dest_col},
@@ -62,9 +61,20 @@ def handle_get_move():
                 "outcome": chess_service.get_game_outcome()
             }
 
-        print(response_payload)
+        # print(response_payload)
         return response_payload
 
+@routes.route('/ai_move', methods=['GET'])
+def handle_get_ai_move():
+    move = chess_service.ai_move(algorithm_service)
+    response_payload = {
+        "prev": move["prev"],
+        "next": move["next"],
+        "board": chess_service.get_board(),
+        "is_black_turn": chess_service.is_black_turn(),
+        "outcome": chess_service.get_game_outcome()
+    }
+    return response_payload
 
 @routes.route('/reset', methods=['POST'])
 def handle_reset():

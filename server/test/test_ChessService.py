@@ -40,7 +40,7 @@ def test_convert_to_row_col(chess_service: ChessService):
     ]
     for row in range(len(expected_board)):
         for col in range(len(expected_board[row])):
-            assert chess_service._convert_to_row_col(
+            assert chess_service._convert_next_pos_to_row_col(
                 expected_board[row][col]) == (row, col)
 
 
