@@ -1,5 +1,5 @@
 export const Algorithms = {
-  ALPHA_BETA: "ab",
+  MINIMAX: "minmax",
   ALPHA_BETA_PRUNING: "abp"
 }
 

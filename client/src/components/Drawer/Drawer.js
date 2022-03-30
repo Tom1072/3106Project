@@ -5,7 +5,7 @@ import { useState } from "react";
 import { fetchAPI } from "../../services/api";
 
 const Drawer = ({ handleStart, handleStop, started, yourTurn }) => {
-  const [algorithm, setAlgorithm] = useState(Algorithms.ALPHA_BETA);
+  const [algorithm, setAlgorithm] = useState(Algorithms.MINIMAX);
 
   const handleChangeAlgorithm = async (e) => {
     try {
@@ -36,7 +36,7 @@ const Drawer = ({ handleStart, handleStop, started, yourTurn }) => {
             value={algorithm}
             onChange={handleChangeAlgorithm}
           >
-            <option value={Algorithms.ALPHA_BETA}>Alpha-Beta Search</option>
+            <option value={Algorithms.MINIMAX}>Minimax Search</option>
             <option value={Algorithms.ALPHA_BETA_PRUNING}>Alpha-Beta Pruning Search</option>
           </Form.Select>
         </Form.Group>
