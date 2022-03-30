@@ -2,11 +2,7 @@ import chess
 from app.algorithms.SearchInterface import SearchInterface
 
 class MinimaxSearch(SearchInterface):
-    # def next_move(self, board, chess_service):
-    #     print("Alpha-Beta Moved")
-    #     pass
-
-    def get_move(self, initial_state: chess.Board) -> chess.Move:
+    def next_move(self, initial_state: chess.Board) -> chess.Move:
         """Return the best move from the state "initial_state"
         Args:
             initial_state (chess.Board): _description_
@@ -112,7 +108,7 @@ class MinimaxSearch(SearchInterface):
         v = -float('inf')
         move = None
         for a in self.action(board):
-            (v2, a2) = self.min_value(self.result(board, a), depth - 1)
+            (v2, _) = self.min_value(self.result(board, a), depth - 1)
             if v2 > v:
                 (v, move) = (v2, a)
         return (v, move)
@@ -130,7 +126,7 @@ class MinimaxSearch(SearchInterface):
         v = float('inf')
         move = None       
         for a in self.action(board):
-            (v2, a2) = self.max_value(self.result(board, a), depth - 1)
+            (v2, _) = self.max_value(self.result(board, a), depth - 1)
             if v2 < v:
                 (v, move) = (v2, a)
         return (v, move)

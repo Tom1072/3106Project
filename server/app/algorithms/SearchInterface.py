@@ -10,5 +10,5 @@ class SearchInterface():
         "k": 900
     }
 
-    def next_move(self, board, chess_service):
+    def next_move(self, board):
         pass
