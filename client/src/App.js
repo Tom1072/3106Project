@@ -46,7 +46,7 @@ function App() {
     }
   };
 
-  // const move = (row, col, prevRow, prevCol) => {
+  // const handleMove = (row, col, prevRow, prevCol) => {
   //   const newBoard = board;
   //   newBoard[row][col] = newBoard[prevRow][prevCol];
   //   newBoard[prevRow][prevCol] = null;
@@ -97,6 +97,7 @@ function App() {
           disabled={!(gameStarted && yourTurn)}
           choosePiece={handleChoosePiece}
           endGame={handleEndGame}
+          // move={handleMove}
         />
         <Modal
           className={getOutcomeClass()}

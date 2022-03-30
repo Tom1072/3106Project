@@ -1,4 +1,5 @@
 import chess
+from app.services.AlgorithmService import AlgorithmService
 
 BOARD_DIMENSION = 8
 
@@ -43,10 +44,29 @@ class ChessService:
 
         if new_move in self.board.legal_moves:
             self.board.push(new_move)
-            print(self.board)
             return True
         else:
             return False
+
+    def ai_move(self, algorithm_service: AlgorithmService) -> dict:
+        """"
+        Make an AI move 
+
+        Args:
+            algorithm_service (AlgorithmService): the service handle the AI algorithms
+
+        Returns:
+            dict: the dictionary contains 
+        """
+        new_move = self._parse_move(algorithm_service.get_next_move(self.board))
+        org_row, org_col = new_move["org"]
+        dest_row, dest_col = new_move["dest"]
+        if self.move(org_row, org_col, dest_row, dest_col):
+            return {
+                "prev": { "row": org_row, "col": org_col },
+                "next": { "row": dest_row, "col": dest_col }
+            }
+
 
     def get_board(self) -> list:
         """Return the current board state
@@ -108,7 +128,7 @@ class ChessService:
         index = chess.SQUARES.index(square)
         col, row = index % BOARD_DIMENSION, index//BOARD_DIMENSION
         return (row, col)
-
+    
     def _dict_list_to_tuple_list(dict_list: list):
         output = []
         for i in range(len(dict_list)):
@@ -116,3 +136,9 @@ class ChessService:
 
         output.sort()
         return output
+
+    def _parse_move(self, move: chess.Move) -> dict:
+        return {
+            "org": self._convert_to_row_col(move.from_square),
+            "dest": self._convert_to_row_col(move.to_square)
+        }

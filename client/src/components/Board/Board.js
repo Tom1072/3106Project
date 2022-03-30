@@ -4,7 +4,7 @@ import { Results } from "../../assets/constants";
 import { fetchAPI } from "../../services/api";
 import "./Board.css";
 
-const Board = ({ board, setBoard, disabled, setYourTurn, choosePiece, endGame }) => {
+const Board = ({ board, setBoard, disabled, setYourTurn, choosePiece, endGame, move }) => {
   const [validMoves, setValidMoves] = useState([]);
   const [choosingPiece, setChoosingPiece] = useState(true);
   const [prevPosition, setPrevPosition] = useState(null);
@@ -49,30 +49,39 @@ const Board = ({ board, setBoard, disabled, setYourTurn, choosePiece, endGame })
   };
 
   const handleMove = async (row, col, valid) => {
-    setChoosingPiece(true);
-    setValidMoves([]);
+    try {
+      setChoosingPiece(true);
+      setValidMoves([]);
 
-    if (!valid || !prevPosition) {
-      return;
+      if (!valid || !prevPosition) {
+        return;
+      }
+
+      // console.log(`Attempt move at (${row}, ${col})`);
+      setYourTurn(false);
+
+      const yourMove = await fetchAPI("/move", "POST", {
+        prev: prevPosition,
+        next: { row, col },
+      });
+      setBoard(yourMove.board);
+
+      if (yourMove.outcome) {
+        endGame(Results[yourMove.outcome]);
+        return;      
+      }
+      
+      console.log("Bot AI is playing.")
+      const aiMove = await fetchAPI("/ai_move", "GET");
+      setBoard(aiMove.board);
+
+      // TODO: enable this line after finishing AI
+      // setYourTurn(!opponentMoves.is_black_turn);
+    } catch (err) {
+      console.log(err);
     }
 
-    console.log(`Attempt move at (${row}, ${col})`);
-    setYourTurn(false);
-
-    const response = await fetchAPI("/move", "POST", {
-      prev: prevPosition,
-      next: { row, col },
-    });
-    console.log(response);
-    setBoard(response.board);
-
-    if (response.outcome)
-      endGame(Results[response.outcome]);
-
-    // TODO: enable this line after finishing AI
-    // setYourTurn(!opponentMoves.is_black_turn);
     setYourTurn(true);
-
     setPrevPosition(null);
   };
 
