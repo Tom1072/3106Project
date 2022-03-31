@@ -1,6 +1,7 @@
 import chess
 from app.algorithms.SearchInterface import SearchInterface
 
+
 class AlphaBetaPruning(SearchInterface):
     def next_move(self, initial_state: chess.Board) -> chess.Move:
         """Return the best move from the state "initial_state"
@@ -19,8 +20,8 @@ class AlphaBetaPruning(SearchInterface):
             chess.COLORS: the player whose turn it is to move
         """
         return state.turn
-    
-    def action(self, state: chess.Board) -> list[chess.Move]:
+
+    def action(self, state: chess.Board) -> list:
         """the set of possible moves in state "state"
 
         Args:
@@ -59,7 +60,7 @@ class AlphaBetaPruning(SearchInterface):
         Args:
             board (chess.Board): the current state of the game
             player (chess.COLORS): the player who holds the turn in the terminal state
-        
+
         Returns:
             int: the utility/objective value of the state
             (positive for a win, negative for a loss, 0 for a draw)
@@ -92,7 +93,8 @@ class AlphaBetaPruning(SearchInterface):
         Returns:
             chess.Move: the best move
         """
-        (_, best_move) = self.max_value_alpha_beta(board, depth, -float('inf'), float('inf'))
+        (_, best_move) = self.max_value_alpha_beta(
+            board, depth, -float('inf'), float('inf'))
         return best_move if best_move != None else chess.Move.null()
 
     def max_value_alpha_beta(self, board: chess.Board, depth: int, alpha: int, beta: int) -> tuple:
@@ -110,14 +112,15 @@ class AlphaBetaPruning(SearchInterface):
         v = -float('inf')
         move = None
         for a in self.action(board):
-            (v2, _) = self.min_value_alpha_beta(self.result(board, a), depth - 1, alpha, beta)
+            (v2, _) = self.min_value_alpha_beta(
+                self.result(board, a), depth - 1, alpha, beta)
             if v2 > v:
                 (v, move) = (v2, a)
             if v2 > beta:
                 return (v2, move)
             alpha = max(alpha, v2)
         return (v, move)
-    
+
     def min_value_alpha_beta(self, board: chess.Board, depth: int, alpha: int, beta: int) -> tuple:
         """Return the min value of the state "board" with depth "depth"
         Args:
@@ -133,7 +136,8 @@ class AlphaBetaPruning(SearchInterface):
         v = float('inf')
         move = None
         for a in self.action(board):
-            (v2, _) = self.max_value_alpha_beta(self.result(board, a), depth - 1, alpha, beta)
+            (v2, _) = self.max_value_alpha_beta(
+                self.result(board, a), depth - 1, alpha, beta)
             if v2 < v:
                 (v, move) = (v2, a)
             if v2 < alpha:
@@ -150,7 +154,7 @@ class AlphaBetaPruning(SearchInterface):
     #         (org_row, org_col) = self._convert_to_row_col(move.from_square)
     #         (dest_row, dest_col) = self._convert_to_row_col(move.to_square)
     #         possibleMoves.append({"org_row": org_row, "org_col": org_col, "dest_row": dest_row, "dest_col": dest_col})
-        
+
     #     bestMove = -9999
     #     bestMoveFinal = None
     #     for x in possibleMoves:
@@ -204,7 +208,6 @@ class AlphaBetaPruning(SearchInterface):
     #         i += 1
     #         evaluation = evaluation + (getPieceValue(str(board.piece_at(i))) if x else -getPieceValue(str(board.piece_at(i))))
     #     return evaluation
-
 
     # def getPieceValue(piece):
     #     if(piece == None):
