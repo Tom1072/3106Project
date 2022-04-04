@@ -9,6 +9,7 @@ class MinimaxSearch(SearchInterface):
         Returns:
             chess.Move: the best move
         """
+        print("Minimax AI Playing...")
         return self.minimax(initial_state, self.MAX_DEPTH)
 
     def to_move(self, state: chess.Board) -> chess.COLORS:
@@ -130,6 +131,3 @@ class MinimaxSearch(SearchInterface):
             if v2 < v:
                 (v, move) = (v2, a)
         return (v, move)
-
-    def _convert_to_square(self, row: int, col: int) -> chess.Square:
-        return chess.SQUARES[row * self.BOARD_DIMENSION + col]
