@@ -1,9 +1,18 @@
+import concurrent.futures
 import chess
-from app.algorithms.SearchInterface import SearchInterface
-from threading import Thread
 
+BOARD_DIMENSION = 8
+MAX_DEPTH = 4
+VALUE_MAP = {
+    "p": 10,
+    "n": 30,
+    "b": 30,
+    "r": 50,
+    "q": 90,
+    "k": 900
+}
 
-class AlphaBetaPruning(SearchInterface):
+class ConcurrentAlphaBetaPruning():
     def next_move(self, initial_state: chess.Board) -> chess.Move:
         """Return the best move from the state "initial_state"
         Args:
@@ -11,7 +20,7 @@ class AlphaBetaPruning(SearchInterface):
         Returns:
             chess.Move: the best move
         """
-        return self.alpha_beta_search(initial_state, self.MAX_DEPTH)
+        return self.alpha_beta_search(initial_state, MAX_DEPTH)
 
     def to_move(self, state: chess.Board) -> chess.COLORS:
         """The player whose turn it is to move in state "state"
@@ -74,14 +83,14 @@ class AlphaBetaPruning(SearchInterface):
                     # Get the piece type
                     piece_type = square.piece_type
                     # Get the piece value
-                    piece_value = self.VALUE_MAP[chess.PIECE_SYMBOLS[piece_type]]
+                    piece_value = VALUE_MAP[chess.PIECE_SYMBOLS[piece_type]]
                     # Add the piece value to the total value
                     total_value += piece_value
                 elif (square != None and square.color != player):
                     # Get the piece type
                     piece_type = square.piece_type
                     # Get the piece value
-                    piece_value = self.VALUE_MAP[chess.PIECE_SYMBOLS[piece_type]]
+                    piece_value = VALUE_MAP[chess.PIECE_SYMBOLS[piece_type]]
                     # Subtract the piece value from the total value
                     total_value = piece_value
         return total_value
@@ -112,14 +121,30 @@ class AlphaBetaPruning(SearchInterface):
             return (self.utility(board, self.to_move(board)), None)
         v = -float('inf')
         move = None
-        for a in self.action(board):
-            (v2, _) = self.min_value_alpha_beta(
-                self.result(board, a), depth - 1, alpha, beta)
-            if v2 > v:
-                (v, move) = (v2, a)
-            if v2 > beta:
-                return (v2, move)
-            alpha = max(alpha, v2)
+
+        # if depth == 1:
+        with concurrent.futures.ThreadPoolExecutor() as executor:
+            possible_actions = [a for a in self.action(board)]
+            resulting_states = [self.result(board, a) for a in possible_actions]
+            depths = [depth - 1 for _ in possible_actions]
+            alphas = [alpha for _ in possible_actions]
+            betas = [beta for _ in possible_actions]
+            results = executor.map(self.min_value_alpha_beta, resulting_states, depths, alphas, betas)
+            for i, (v2, _) in enumerate(results):
+                if v2 > v:
+                    (v, move) = (v2, possible_actions[i])
+                if v2 > beta:
+                    return (v2, move)
+                alpha = max(alpha, v2)
+        # else:
+        #     for a in self.action(board):
+        #         (v2, _) = self.min_value_alpha_beta(
+        #             self.result(board, a), depth - 1, alpha, beta)
+        #         if v2 > v:
+        #             (v, move) = (v2, a)
+        #         if v2 > beta:
+        #             return (v2, move)
+        #         alpha = max(alpha, v2)
         return (v, move)
 
     def min_value_alpha_beta(self, board: chess.Board, depth: int, alpha: int, beta: int) -> tuple:
@@ -136,6 +161,21 @@ class AlphaBetaPruning(SearchInterface):
             return (self.utility(board, self.to_move(board)), None)
         v = float('inf')
         move = None
+        # if depth == 1:
+        #     with concurrent.futures.ThreadPoolExecutor() as executor:
+        #         possible_actions = [a for a in self.action(board)]
+        #         resulting_states = [self.result(board, a) for a in possible_actions]
+        #         depths = [depth - 1 for _ in possible_actions]
+        #         alphas = [alpha for _ in possible_actions]
+        #         betas = [beta for _ in possible_actions]
+        #         results = executor.map(self.max_value_alpha_beta, resulting_states, depths, alphas, betas)
+        #         for i, (v2, _) in enumerate(results):
+        #             if v2 < v:
+        #                 (v, move) = (v2, possible_actions[i])
+        #             if v2 < alpha:
+        #                 return (v2, move)
+        #             alpha = min(alpha, v2)
+        # else:
         for a in self.action(board):
             (v2, _) = self.max_value_alpha_beta(
                 self.result(board, a), depth - 1, alpha, beta)
@@ -147,4 +187,4 @@ class AlphaBetaPruning(SearchInterface):
         return (v, move)
 
     def _convert_to_square(self, row: int, col: int) -> chess.Square:
-        return chess.SQUARES[row * self.BOARD_DIMENSION + col]
+        return chess.SQUARES[row * BOARD_DIMENSION + col]
