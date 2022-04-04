@@ -1,6 +1,7 @@
-export const Algorithms = {
-  MINIMAX: "minmax",
-  ALPHA_BETA_PRUNING: "abp"
+export const AlgorithmCodes = {
+  "minmax": "Minimax Search",
+  "abp": "Alpha-Beta Pruning Search",
+  "quiescence": "Quiescence Search",
 }
 
 export const Results = {

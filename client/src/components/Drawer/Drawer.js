@@ -1,11 +1,11 @@
 import "./Drawer.css";
-import { Algorithms } from "../../assets/constants";
+import { AlgorithmCodes } from "../../assets/constants";
 import { Form, Button } from "react-bootstrap";
 import { useState } from "react";
 import { fetchAPI } from "../../services/api";
 
 const Drawer = ({ handleStart, handleStop, started, yourTurn }) => {
-  const [algorithm, setAlgorithm] = useState(Algorithms.MINIMAX);
+  const [algorithm, setAlgorithm] = useState(AlgorithmCodes.minmax);
 
   const handleChangeAlgorithm = async (e) => {
     try {
@@ -36,8 +36,9 @@ const Drawer = ({ handleStart, handleStop, started, yourTurn }) => {
             value={algorithm}
             onChange={handleChangeAlgorithm}
           >
-            <option value={Algorithms.MINIMAX}>Minimax Search</option>
-            <option value={Algorithms.ALPHA_BETA_PRUNING}>Alpha-Beta Pruning Search</option>
+            {Object.entries(AlgorithmCodes).map(([code, algo_name], index) => 
+              <option key={code} value={code}>{algo_name}</option>
+            )}
           </Form.Select>
         </Form.Group>
 
