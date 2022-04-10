@@ -11,6 +11,7 @@ class AlphaBetaPruning(SearchInterface):
         Returns:
             chess.Move: the best move
         """
+        print("Alpha-Beta Pruning AI Playing...")
         return self.alpha_beta_search(initial_state, self.MAX_DEPTH)
 
     def to_move(self, state: chess.Board) -> chess.COLORS:

@@ -1,3 +1,4 @@
+import chess
 class SearchInterface():
     BOARD_DIMENSION = 8
     MAX_DEPTH = 4
@@ -12,3 +13,6 @@ class SearchInterface():
 
     def next_move(self, board):
         pass
+
+    def _convert_to_square(self, row: int, col: int) -> chess.Square:
+        return chess.SQUARES[row * self.BOARD_DIMENSION + col]
