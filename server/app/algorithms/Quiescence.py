@@ -1,124 +1,194 @@
 import chess
-import chess.engine
-import random
-import chess.svg
 from app.algorithms.SearchInterface import SearchInterface
 
 
 class QuiescenceSearch(SearchInterface):
-    def __init__(self):
-        self.init_alpha = -100000
-        self.init_beta = 100000
-        self.max_depth = 10
-
-    def next_move(self, board: chess.Board) -> chess.Move:
+    def next_move(self, initial_state: chess.Board) -> chess.Move:
         """Return the best move from the state "initial_state"
         Args:
             initial_state (chess.Board): _description_
         Returns:
             chess.Move: the best move
         """
-        best_move_score = -100000
-        best_move = None
-        is_max_player = bool(random.getrandbits(1))
+        print("Quiescence Search AI Playing...")
+        return self.alpha_beta_search(initial_state, self.MAX_DEPTH)
 
-        for legal_move in board.legal_moves:
-            move = chess.Move.from_uci(str(legal_move))
-            board.push(move)
-            move_score, nodes_per_depth = self.quiescence_search(board, self.max_depth, is_max_player, self.init_alpha, self.init_beta, {})
-            score = max(best_move_score, move_score)
-            board.pop()
+    def to_move(self, state: chess.Board) -> chess.COLORS:
+        """The player whose turn it is to move in state "state"
+        Args:
+            state (chess.Board): the current state of the game
+        Returns:
+            chess.COLORS: the player whose turn it is to move
+        """
+        return state.turn
 
-            if score > best_move_score:
-                best_move_score = score
-                best_move = move
+    def action(self, state: chess.Board) -> list:
+        """the set of possible moves in state "state"
 
-        # return (best_move, nodes_per_depth)
-        print("Quiescence AI Playing...")
-        return best_move
+        Args:
+            state (chess.Board): the current state of the game
+        Returns:
+            list[chess.Move]: the set of possible moves
+        """
+        return state.legal_moves
 
-    def get_piece_val(self, board: chess.Board, pos: tuple[int, int]):
-        piece_type = board.piece_type_at(self._convert_to_square(*pos))
-        return 0 if not piece_type else self.VALUE_MAP[chess.PIECE_SYMBOLS[piece_type]]
+    def result(self, state: chess.Board, action: chess.Move) -> chess.Board:
+        """The transion model which defines the state resulting 
+        from taking the action "action" in state "state"
 
-    def static_eval(self, board: chess.Board):
-        evaluation = 0
-        x = True
+        Args:
+            state (chess.Board): the current state of the game
+            action (chess.Move): the action to be taken
+        Returns:
+            chess.Board: the resulting state
+        """
+        # resulting_state = state.copy()
+        state.push(action)
+        return state
 
-        try:
-            x = bool(board.piece_at(i).color)
-        except Exception as e:
-            x = x
-
-        for i in range(0, 8):
-            for j in range(0, 8):
-                evaluation += self.get_piece_val(board, (i, j)) * (1 if x else -1)
-
-        return evaluation
-
-    def is_favorable_move(self, board: chess.Board, move: chess.Move) -> bool:
-        if move.promotion is not None:
+    def is_terminal(self, board: chess.Board, depth: int) -> bool:
+        """Return True if the state "board" is a terminal state,
+        False otherwise
+        """
+        if depth == 0 or board.is_game_over():
             return True
-        
-        # print(move)
-        # print(move.from_square)
-        # print(move.to_square)
-
-        if board.is_capture(move) and not board.is_en_passant(move):
-            org_piece_symbol = chess.PIECE_SYMBOLS[board.piece_type_at(move.from_square)]
-            dest_piece_symbol = chess.PIECE_SYMBOLS[board.piece_type_at(move.to_square)]
-            current_player_attackers = board.attackers(board.turn, move.to_square)
-            next_player_attackers = board.attackers(not board.turn, move.to_square)
-
-            if self.VALUE_MAP[org_piece_symbol] < self.VALUE_MAP[dest_piece_symbol] or \
-               len(current_player_attackers) > len(next_player_attackers):
-                return True
-        
         return False
 
-    def quiescence_search(self, board: chess.Board, current_depth: int, is_max_player: bool, alpha: int, beta: int, nodes_per_depth: int) -> tuple[int, int]:
-        # This if else code block is only used for analysis of algorithm, by counting number of nodes explored
-        if self.max_depth - current_depth in nodes_per_depth:
-            nodes_per_depth[self.max_depth - current_depth] += 1
-        else:
-            nodes_per_depth[self.max_depth - current_depth] = 1
-
-        if current_depth == 0:
-            leaf_node_score = self.static_eval(board)
-            return (leaf_node_score, nodes_per_depth)
-
-        if self.max_depth - current_depth > 3:
-            all_possible_capture_moves = [move for move in board.legal_moves if self.is_favorable_move(board, move)]
-        else:
-            all_possible_capture_moves = board.legal_moves
-
-        best_score = -100000 if is_max_player else 100000
-
-        for legal_move in all_possible_capture_moves:
-            move = chess.Move.from_uci(str(legal_move))
-
-            # pushing the current move to the board
-            board.push(move)
-
-            # calculating node score, if the current node will be the leaf node, then score will be calculated by static evaluation;
-            # score will be calculated by finding max value between node score and current best score.
-            node_score, nodes_per_depth = self.quiescence_search(board, current_depth - 1, not is_max_player, alpha, beta, nodes_per_depth)
-
-            # calculating best score by finding max value between current best score and node score
-
-            # calculating alpha for current MAX node
-            if is_max_player:
-                best_score = max(best_score, node_score)
-                alpha = max(alpha, best_score)
+    def utility(self, board: chess.Board) -> int:
+        wp = len(board.pieces(chess.PAWN, chess.WHITE))
+        bp = len(board.pieces(chess.PAWN, chess.BLACK))
+        wn = len(board.pieces(chess.KNIGHT, chess.WHITE))
+        bn = len(board.pieces(chess.KNIGHT, chess.BLACK))
+        wb = len(board.pieces(chess.BISHOP, chess.WHITE))
+        bb = len(board.pieces(chess.BISHOP, chess.BLACK))
+        wr = len(board.pieces(chess.ROOK, chess.WHITE))
+        br = len(board.pieces(chess.ROOK, chess.BLACK))
+        wq = len(board.pieces(chess.QUEEN, chess.WHITE))
+        bq = len(board.pieces(chess.QUEEN, chess.BLACK))
+    
+        material = 100*(wp-bp)+320*(wn-bn)+330*(wb-bb)+500*(wr-br)+900*(wq-bq)
+        material = 100*(wp-bp)+320*(wn-bn)+330*(wb-bb)+500*(wr-br)+900*(wq-bq)
+        
+        pawnsq = sum([self.PAWN_TABLE[i] for i in board.pieces(chess.PAWN, chess.WHITE)])
+        pawnsq= pawnsq + sum([-self.PAWN_TABLE[chess.square_mirror(i)] 
+                                        for i in board.pieces(chess.PAWN, chess.BLACK)])
+        knightsq = sum([self.KNIGHT_TABLE[i] for i in board.pieces(chess.KNIGHT, chess.WHITE)])
+        knightsq = knightsq + sum([-self.KNIGHT_TABLE[chess.square_mirror(i)] 
+                                        for i in board.pieces(chess.KNIGHT, chess.BLACK)])
+        bishopsq= sum([self.BISHOP_TABLE[i] for i in board.pieces(chess.BISHOP, chess.WHITE)])
+        bishopsq= bishopsq + sum([-self.BISHOP_TABLE[chess.square_mirror(i)] 
+                                        for i in board.pieces(chess.BISHOP, chess.BLACK)])
+        rooksq = sum([self.ROOK_TABLE[i] for i in board.pieces(chess.ROOK, chess.WHITE)]) 
+        rooksq = rooksq + sum([-self.ROOK_TABLE[chess.square_mirror(i)] 
+                                        for i in board.pieces(chess.ROOK, chess.BLACK)])
+        queensq = sum([self.QUEEN_TABLE[i] for i in board.pieces(chess.QUEEN, chess.WHITE)]) 
+        queensq = queensq + sum([-self.QUEEN_TABLE[chess.square_mirror(i)] 
+                                        for i in board.pieces(chess.QUEEN, chess.BLACK)])
+        kingsq = sum([self.KING_TABLE[i] for i in board.pieces(chess.KING, chess.WHITE)]) 
+        kingsq = kingsq + sum([-self.KING_TABLE[chess.square_mirror(i)] 
+                                        for i in board.pieces(chess.KING, chess.BLACK)])
+        
+        boardvalue = material + pawnsq + knightsq + bishopsq + rooksq + queensq + kingsq
+        if board.is_checkmate():
+            if board.turn:
+                return -9999
             else:
-                best_score = min(best_score, node_score)
-                beta = min(beta, best_score)
+                return 9999
 
-            # undoing the last move, so as to explore new moves while backtracking
+        if board.is_stalemate():
+            return 0
+        if board.is_insufficient_material():
+            return 0
+        
+        eval = boardvalue
+        if board.turn:
+            return eval
+        else:
+            return -eval
+
+    def alpha_beta_search(self, board: chess.Board, depth: int) -> chess.Move:
+        """Return the minimax value of the state "board" with depth "depth"
+        Args:
+            board (chess.Board): the current state of the game
+            depth (int): the depth of the search tree
+        Returns:
+            chess.Move: the best move
+        """
+        (_, best_move) = self.max_value_alpha_beta(
+            board, depth, -float('inf'), float('inf'), False)
+        return best_move if best_move != None else chess.Move.null()
+
+    def is_capture_move(self, board: chess.Board, move: chess.Move) -> bool:
+        """Return True if the move "move" results in the capture of Queen, King, Rook, or Bishop, False otherwise"""
+        if board.is_capture(move) and (board.piece_type_at(move.to_square) in (chess.QUEEN, chess.ROOK, chess.BISHOP, chess.KNIGHT, chess.KING)):
+            return True
+        return False
+
+    def contain_capture_move(self, board: chess.Board):
+        for move in board.legal_moves:
+            self.is_capture_move(board, move)
+        return False
+
+    def max_value_alpha_beta(self, board: chess.Board, depth: int, alpha: int, beta: int, capture_move_only: bool) -> tuple:
+        """Return the max value of the state "board" with depth "depth"
+        Args:
+            board (chess.Board): the current state of the game
+            depth (int): the depth of the search tree
+            alpha (int): the alpha value
+            beta (int): the beta value
+        Returns:
+            tuple(int, chess.Move): the max value of the state and the move that leads to it
+        """
+        if self.is_terminal(board, depth):
+            if self.contain_capture_move(board) and not board.is_game_over() and depth == 0:
+                depth = 1 # if there is a capture move, we need to search deeper
+                capture_move_only = True
+            else:
+                return (self.utility(board) , None)
+
+        v = -float('inf')
+        move = None
+        for a in self.action(board):
+            if capture_move_only and not self.is_capture_move(board, a):
+                continue
+            (v2, _) = self.min_value_alpha_beta(self.result(board, a), depth - 1, alpha, beta, capture_move_only)
             board.pop()
+            if v2 > v:
+                (v, move) = (v2, a)
+            if v2 > beta:
+                return (v2, move)
+            alpha = max(alpha, v2)
+        return (v, move)
 
-            # beta cut off
-            if beta <= alpha:
-                return (best_score, nodes_per_depth)
+    def min_value_alpha_beta(self, board: chess.Board, depth: int, alpha: int, beta: int, capture_move_only: bool) -> tuple:
+        """Return the min value of the state "board" with depth "depth"
+        Args:
+            board (chess.Board): the current state of the game
+            depth (int): the depth of the search tree
+            alpha (int): the alpha value
+            beta (int): the beta value
+        Returns:
+            tuple(int, chess.Move): the min value of the state and the move that leads to it
+        """
+        if self.is_terminal(board, depth):
+            if self.contain_capture_move(board) and not board.is_game_over() and depth == 0:
+                depth = 1 # if there is a capture move, we need to search deeper
+                capture_move_only = True
+            else:
+                return (self.utility(board) , None)
+        v = float('inf')
+        move = None
+        for a in self.action(board):
+            if capture_move_only and not self.is_capture_move(board, a):
+                continue
+            (v2, _) = self.max_value_alpha_beta(self.result(board, a), depth - 1, alpha, beta, capture_move_only)
+            board.pop()
+            if v2 < v:
+                (v, move) = (v2, a)
+            if v2 < alpha:
+                return (v2, move)
+            alpha = min(alpha, v2)
+        return (v, move)
 
-        return (best_score, nodes_per_depth)
+    def _convert_to_square(self, row: int, col: int) -> chess.Square:
+        return chess.SQUARES[row * self.BOARD_DIMENSION + col]

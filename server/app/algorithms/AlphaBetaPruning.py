@@ -43,9 +43,9 @@ class AlphaBetaPruning(SearchInterface):
         Returns:
             chess.Board: the resulting state
         """
-        resulting_state = state.copy()
-        resulting_state.push(action)
-        return resulting_state
+        # resulting_state = state.copy()
+        state.push(action)
+        return state
 
     def is_terminal(self, board: chess.Board, depth: int) -> bool:
         """Return True if the state "board" is a terminal state,
@@ -56,36 +56,88 @@ class AlphaBetaPruning(SearchInterface):
         return False
 
     def utility(self, board: chess.Board, player: chess.COLORS) -> int:
-        """Return the utility/objective/heuristic value of the state "board" for the
-        player "player" when the game is over
+        wp = len(board.pieces(chess.PAWN, chess.WHITE))
+        bp = len(board.pieces(chess.PAWN, chess.BLACK))
+        wn = len(board.pieces(chess.KNIGHT, chess.WHITE))
+        bn = len(board.pieces(chess.KNIGHT, chess.BLACK))
+        wb = len(board.pieces(chess.BISHOP, chess.WHITE))
+        bb = len(board.pieces(chess.BISHOP, chess.BLACK))
+        wr = len(board.pieces(chess.ROOK, chess.WHITE))
+        br = len(board.pieces(chess.ROOK, chess.BLACK))
+        wq = len(board.pieces(chess.QUEEN, chess.WHITE))
+        bq = len(board.pieces(chess.QUEEN, chess.BLACK))
+    
+        material = 100*(wp-bp)+320*(wn-bn)+330*(wb-bb)+500*(wr-br)+900*(wq-bq)
+        material = 100*(wp-bp)+320*(wn-bn)+330*(wb-bb)+500*(wr-br)+900*(wq-bq)
+        
+        pawnsq = sum([self.PAWN_TABLE[i] for i in board.pieces(chess.PAWN, chess.WHITE)])
+        pawnsq= pawnsq + sum([-self.PAWN_TABLE[chess.square_mirror(i)] 
+                                        for i in board.pieces(chess.PAWN, chess.BLACK)])
+        knightsq = sum([self.KNIGHT_TABLE[i] for i in board.pieces(chess.KNIGHT, chess.WHITE)])
+        knightsq = knightsq + sum([-self.KNIGHT_TABLE[chess.square_mirror(i)] 
+                                        for i in board.pieces(chess.KNIGHT, chess.BLACK)])
+        bishopsq= sum([self.BISHOP_TABLE[i] for i in board.pieces(chess.BISHOP, chess.WHITE)])
+        bishopsq= bishopsq + sum([-self.BISHOP_TABLE[chess.square_mirror(i)] 
+                                        for i in board.pieces(chess.BISHOP, chess.BLACK)])
+        rooksq = sum([self.ROOK_TABLE[i] for i in board.pieces(chess.ROOK, chess.WHITE)]) 
+        rooksq = rooksq + sum([-self.ROOK_TABLE[chess.square_mirror(i)] 
+                                        for i in board.pieces(chess.ROOK, chess.BLACK)])
+        queensq = sum([self.QUEEN_TABLE[i] for i in board.pieces(chess.QUEEN, chess.WHITE)]) 
+        queensq = queensq + sum([-self.QUEEN_TABLE[chess.square_mirror(i)] 
+                                        for i in board.pieces(chess.QUEEN, chess.BLACK)])
+        kingsq = sum([self.KING_TABLE[i] for i in board.pieces(chess.KING, chess.WHITE)]) 
+        kingsq = kingsq + sum([-self.KING_TABLE[chess.square_mirror(i)] 
+                                        for i in board.pieces(chess.KING, chess.BLACK)])
+        
+        boardvalue = material + pawnsq + knightsq + bishopsq + rooksq + queensq + kingsq
+        if board.is_checkmate():
+            if board.turn:
+                return -9999
+            else:
+                return 9999
 
-        Args:
-            board (chess.Board): the current state of the game
-            player (chess.COLORS): the player who holds the turn in the terminal state
+        if board.is_stalemate():
+            return 0
+        if board.is_insufficient_material():
+            return 0
+        
+        eval = boardvalue
+        if board.turn:
+            return eval
+        else:
+            return -eval
 
-        Returns:
-            int: the utility/objective value of the state
-            (positive for a win, negative for a loss, 0 for a draw)
-        """
-        total_value = 0
-        for i in range(0, 8):
-            for j in range(0, 8):
-                square = board.piece_at(self._convert_to_square(i, j))
-                if (square != None and square.color == player):
-                    # Get the piece type
-                    piece_type = square.piece_type
-                    # Get the piece value
-                    piece_value = self.VALUE_MAP[chess.PIECE_SYMBOLS[piece_type]]
-                    # Add the piece value to the total value
-                    total_value += piece_value
-                elif (square != None and square.color != player):
-                    # Get the piece type
-                    piece_type = square.piece_type
-                    # Get the piece value
-                    piece_value = self.VALUE_MAP[chess.PIECE_SYMBOLS[piece_type]]
-                    # Subtract the piece value from the total value
-                    total_value = piece_value
-        return total_value
+    # def utility(self, board: chess.Board, player: chess.COLORS) -> int:
+    #     """Return the utility/objective/heuristic value of the state "board" for the
+    #     player "player" when the game is over
+
+    #     Args:
+    #         board (chess.Board): the current state of the game
+    #         player (chess.COLORS): the player who holds the turn in the terminal state
+
+    #     Returns:
+    #         int: the utility/objective value of the state
+    #         (positive for a win, negative for a loss, 0 for a draw)
+    #     """
+    #     total_value = 0
+    #     for i in range(0, 8):
+    #         for j in range(0, 8):
+    #             square = board.piece_at(self._convert_to_square(i, j))
+    #             if (square != None and square.color == player):
+    #                 # Get the piece type
+    #                 piece_type = square.piece_type
+    #                 # Get the piece value
+    #                 piece_value = self.VALUE_MAP[chess.PIECE_SYMBOLS[piece_type]]
+    #                 # Add the piece value to the total value
+    #                 total_value += piece_value
+    #             elif (square != None and square.color != player):
+    #                 # Get the piece type
+    #                 piece_type = square.piece_type
+    #                 # Get the piece value
+    #                 piece_value = self.VALUE_MAP[chess.PIECE_SYMBOLS[piece_type]]
+    #                 # Subtract the piece value from the total value
+    #                 total_value = piece_value
+    #     return total_value
 
     def alpha_beta_search(self, board: chess.Board, depth: int) -> chess.Move:
         """Return the minimax value of the state "board" with depth "depth"
@@ -116,6 +168,7 @@ class AlphaBetaPruning(SearchInterface):
         for a in self.action(board):
             (v2, _) = self.min_value_alpha_beta(
                 self.result(board, a), depth - 1, alpha, beta)
+            board.pop()
             if v2 > v:
                 (v, move) = (v2, a)
             if v2 > beta:
@@ -140,6 +193,7 @@ class AlphaBetaPruning(SearchInterface):
         for a in self.action(board):
             (v2, _) = self.max_value_alpha_beta(
                 self.result(board, a), depth - 1, alpha, beta)
+            board.pop()
             if v2 < v:
                 (v, move) = (v2, a)
             if v2 < alpha:
