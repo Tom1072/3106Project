@@ -4,7 +4,8 @@ from app.services.AlgorithmService import AlgorithmService
 
 routes = Blueprint("routes", __name__)
 chess_service = ChessService()
-algorithm_service = AlgorithmService()
+algorithm_service1 = AlgorithmService()
+algorithm_service2 = AlgorithmService()
 
 
 @routes.route('/move', methods=['GET', 'POST'])
@@ -64,9 +65,16 @@ def handle_get_move():
         # print(response_payload)
         return response_payload
 
-@routes.route('/ai_move', methods=['GET'])
-def handle_get_ai_move():
-    move = chess_service.ai_move(algorithm_service)
+@routes.route('/ai_move/<player_num>', methods=['GET'])
+def handle_get_ai_move(player_num):
+    if player_num not in (1, 2):
+        return "Invalid player number provided."
+
+    if player_num == 1:
+        move = chess_service.ai_move(algorithm_service1)
+    else:
+        move = chess_service.ai_move(algorithm_service2)
+
     response_payload = {
         "prev": move["prev"],
         "next": move["next"],
@@ -87,8 +95,15 @@ def handle_reset():
 
     return response_payload
 
-@routes.route('/algorithm', methods=['PUT'])
-def handle_change_algorithm():
+@routes.route('/algorithm/<player_num>', methods=['PUT'])
+def handle_change_algorithm(player_num):
+    if player_num not in (1, 2):
+        return "Invalid player number provided."
+
     algorithm = request.json["algorithm"]
-    algorithm_service.switchAlgorithm(algorithm)
+    print("Changing player", player_num, "to", algorithm)
+    if player_num == 1:
+        algorithm_service1.switchAlgorithm(algorithm)
+    else:
+        algorithm_service2.switchAlgorithm(algorithm)
     return "Algorithm Changed."

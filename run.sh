@@ -17,7 +17,6 @@ if [[ ${first_flag} == "true" ]]; then
     cd ./client
     rm -rf ./node_modules
     npm i
-    export REACT_APP_SERVER_URL=http://127.0.0.1:5000/api
     
     cd ../server
     rm -rf venv
@@ -25,13 +24,13 @@ if [[ ${first_flag} == "true" ]]; then
     source ./venv/bin/activate
     pip install --upgrade pip
     pip install -r requirements.txt
-    export FLASK_APP=server FLASK_ENV=development
     
     cd ..
 fi
 
 if [[ ${client_flag} == "true" ]]; then
     cd ./client
+    export REACT_APP_SERVER_URL=http://localhost:5000/api
     npm start
     cd ..
 elif [[ ${server_flag} == "true" ]]; then

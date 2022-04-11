@@ -4,13 +4,23 @@ import { Form, Button } from "react-bootstrap";
 import { useState } from "react";
 import { fetchAPI } from "../../services/api";
 
-const Drawer = ({ handleStart, handleStop, started, yourTurn }) => {
-  const [algorithm, setAlgorithm] = useState(AlgorithmCodes.minmax);
+const Drawer = ({ handleStart, handleStop, started, turnPlayer1, player1, setPlayer1 }) => {
+  const [player2, setPlayer2] = useState(AlgorithmCodes.minmax);
 
-  const handleChangeAlgorithm = async (e) => {
+  const handleChangeAlgorithm1 = async (e) => {
     try {
-      setAlgorithm(e.target.value);
-      await fetchAPI("/algorithm", "PUT", { algorithm: e.target.value })
+      setPlayer1(e.target.value);
+      if (e.target.value === "human") return;
+      await fetchAPI("/algorithm/1", "PUT", { algorithm: e.target.value })
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  const handleChangeAlgorithm2 = async (e) => {
+    try {
+      setPlayer2(e.target.value);
+      await fetchAPI("/algorithm/2", "PUT", { algorithm: e.target.value })
     } catch (err) {
       console.log(err)
     }
@@ -20,21 +30,34 @@ const Drawer = ({ handleStart, handleStop, started, yourTurn }) => {
     e.preventDefault();
 
     if (started) handleStop();
-    else handleStart(algorithm);
+    else handleStart(player1);
   };
 
   return (
     <div className="drawer">
-      <Button variant={yourTurn ? "success" : "danger"} className="turn-status" size="lg">
-        {yourTurn ? "Your turn" : "Opponent's turn"}
+      <Button variant={turnPlayer1 ? "success" : "danger"} className="turn-status" size="lg">
+        {turnPlayer1 ? "Player 1's turn" : "Player 2's turn"}
       </Button>
       <Form onSubmit={handleSubmit}>
         <Form.Group>
-          <Form.Label>Search Algorithm</Form.Label>
+          <Form.Label>Player 1</Form.Label>
           <Form.Select
             disabled={started}
-            value={algorithm}
-            onChange={handleChangeAlgorithm}
+            value={player1}
+            onChange={handleChangeAlgorithm1}
+          >
+            {[["human", "Human"], ...Object.entries(AlgorithmCodes)].map(([code, algo_name], index) => 
+              <option key={code} value={code}>{algo_name}</option>
+            )}
+          </Form.Select>
+
+          <div className="vs-text">V.S.</div>
+
+          <Form.Label>Player 2</Form.Label>
+          <Form.Select
+            disabled={started}
+            value={player2}
+            onChange={handleChangeAlgorithm2}
           >
             {Object.entries(AlgorithmCodes).map(([code, algo_name], index) => 
               <option key={code} value={code}>{algo_name}</option>

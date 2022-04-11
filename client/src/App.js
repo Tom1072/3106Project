@@ -12,15 +12,16 @@ import { useEffect } from "react";
 function App() {
   const [gameStarted, setGameStarted] = useState(false);
   const [board, setBoard] = useState([]);
-  const [yourTurn, setYourTurn] = useState(true);
+  const [turnPlayer1, setTurnPlayer1] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [outcome, setOutcome] = useState(null);
+  const [player1, setPlayer1] = useState("human");
 
   useEffect(() => {
     const init = async () => {
       const response = await fetchAPI("/reset", "POST");
       setBoard(response.board);
-      setYourTurn(!response.is_black_turn) // You're a white piece
+      setTurnPlayer1(!response.is_black_turn) // You're a white piece
     };
 
     init();
@@ -45,13 +46,6 @@ function App() {
       console.log(err);
     }
   };
-
-  // const handleMove = (row, col, prevRow, prevCol) => {
-  //   const newBoard = board;
-  //   newBoard[row][col] = newBoard[prevRow][prevCol];
-  //   newBoard[prevRow][prevCol] = null;
-  // }
-
 
   const toggleModal = () => setShowModal(!showModal);
 
@@ -87,17 +81,19 @@ function App() {
           handleStart={handleStartGame}
           handleStop={handleStopGame}
           started={gameStarted}
-          yourTurn={yourTurn}
+          turnPlayer1={turnPlayer1}
           shuffleBoard={() => setBoard(shuffleBoard(board))}
+          player1={player1}
+          setPlayer1={setPlayer1}
         />
         <Board
           board={board}
           setBoard={setBoard}
-          setYourTurn={setYourTurn}
-          disabled={!(gameStarted && yourTurn)}
+          setTurnPlayer1={setTurnPlayer1}
+          disabled={player1 !== "human" || !(gameStarted && turnPlayer1)}
           choosePiece={handleChoosePiece}
           endGame={handleEndGame}
-          // move={handleMove}
+          player1={player1}
         />
         <Modal
           className={getOutcomeClass()}
