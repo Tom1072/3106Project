@@ -11,6 +11,7 @@ Full-stack Chess Game with AI integration.
 
 - **Server**: Flask
 - **Client**: React
+- **Chess engine**: python-chess
 
 ## All-in-one workflow
 _**All must be done in the main (`/`) cloned directory**_
