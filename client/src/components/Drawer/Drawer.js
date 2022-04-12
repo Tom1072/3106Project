@@ -5,7 +5,7 @@ import { useState } from "react";
 import { fetchAPI } from "../../services/api";
 
 const Drawer = ({ handleStart, handleStop, started, turnPlayer1, player1, setPlayer1 }) => {
-  const [player2, setPlayer2] = useState(AlgorithmCodes.minmax);
+  const [player2, setPlayer2] = useState("minmax");
 
   const handleChangeAlgorithm1 = async (e) => {
     try {
@@ -30,7 +30,7 @@ const Drawer = ({ handleStart, handleStop, started, turnPlayer1, player1, setPla
     e.preventDefault();
 
     if (started) handleStop();
-    else handleStart(player1);
+    else handleStart(player2);
   };
 
   return (

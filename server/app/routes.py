@@ -65,24 +65,27 @@ def handle_get_move():
         # print(response_payload)
         return response_payload
 
-@routes.route('/ai_move/<player_num>', methods=['GET'])
-def handle_get_ai_move(player_num):
-    if player_num not in (1, 2):
-        return "Invalid player number provided."
+@routes.route('/ai_move/<player_id>', methods=['GET'])
+def handle_get_ai_move(player_id):
+    try:
+        if player_id not in ("1", "2"):
+            return "Invalid player id provided."
 
-    if player_num == 1:
-        move = chess_service.ai_move(algorithm_service1)
-    else:
-        move = chess_service.ai_move(algorithm_service2)
+        if player_id == "1":
+            move = chess_service.ai_move(algorithm_service1)
+        else:
+            move = chess_service.ai_move(algorithm_service2)
 
-    response_payload = {
-        "prev": move["prev"],
-        "next": move["next"],
-        "board": chess_service.get_board(),
-        "is_black_turn": chess_service.is_black_turn(),
-        "outcome": chess_service.get_game_outcome()
-    }
-    return response_payload
+        response_payload = {
+            "prev": move["prev"],
+            "next": move["next"],
+            "board": chess_service.get_board(),
+            "is_black_turn": chess_service.is_black_turn(),
+            "outcome": chess_service.get_game_outcome()
+        }
+        return response_payload
+    except Exception:
+        return "Error occured."
 
 @routes.route('/reset', methods=['POST'])
 def handle_reset():
@@ -95,14 +98,14 @@ def handle_reset():
 
     return response_payload
 
-@routes.route('/algorithm/<player_num>', methods=['PUT'])
-def handle_change_algorithm(player_num):
-    if player_num not in (1, 2):
+@routes.route('/algorithm/<player_id>', methods=['PUT'])
+def handle_change_algorithm(player_id):
+    if player_id not in ("1", "2"):
         return "Invalid player number provided."
 
     algorithm = request.json["algorithm"]
-    print("Changing player", player_num, "to", algorithm)
-    if player_num == 1:
+    print("Player", player_id, "changed to", algorithm)
+    if player_id == "1":
         algorithm_service1.switchAlgorithm(algorithm)
     else:
         algorithm_service2.switchAlgorithm(algorithm)

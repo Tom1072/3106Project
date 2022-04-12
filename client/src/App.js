@@ -24,11 +24,24 @@ function App() {
       setTurnPlayer1(!response.is_black_turn) // You're a white piece
     };
 
-    init();
-  }, [gameStarted]);
+    const AIAutoMove = async () => {
+      console.log("Bot AI is playing.")
+      const response = await fetchAPI(`/ai_move/${turnPlayer1 ? 1 : 2}`, "GET");
+      if (typeof response !== "string") {
+        setBoard(response.board);
+        setTurnPlayer1(!turnPlayer1);
+      }
+    }
+
+    if (!gameStarted) {
+      init();
+    } else if (gameStarted && player1 !== "human") {
+      AIAutoMove();
+    }
+  }, [gameStarted, turnPlayer1]);
 
   const handleStartGame = (algorithm) => {
-    console.log(`Starting with ${algorithm} algorithm`);
+    console.log(`P1: ${player1} vs P2: ${algorithm}`);
     setGameStarted(true);
   };
 

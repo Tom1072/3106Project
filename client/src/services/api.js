@@ -24,7 +24,6 @@ export const fetchAPI = async (endpoint, method, data = null) => {
     }
   }
 
-  console.log(config)
   try {
     const res = await axios(config)
     return res.data;

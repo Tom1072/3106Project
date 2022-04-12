@@ -72,7 +72,7 @@ const Board = ({ board, setBoard, disabled, setTurnPlayer1, choosePiece, endGame
       }
       
       console.log("Bot AI is playing.")
-      const aiMove = await fetchAPI("/ai_move", "GET");
+      const aiMove = await fetchAPI("/ai_move/2", "GET");
       setBoard(aiMove.board);
 
       // TODO: enable this line after finishing AI
