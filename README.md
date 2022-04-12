@@ -14,7 +14,7 @@ Full-stack Chess Game with AI integration.
 
 ## All-in-one workflow
 _**All must be done in the main (`/`) cloned directory**_
-1. Setup server (need to be done only one for new cloned repo):
+1. Setup server (need to be done only once for new cloned repo):
 ```bash
 ./run.sh -f
 ```
