@@ -12,12 +12,23 @@ Full-stack Chess Game with AI integration.
 - **Server**: Flask
 - **Client**: React
 
-## Search Algorithms
+## New workflow
+_**All must be done in the main (`/`) cloned directory**_
+1. Setup server (need to be done only one for new cloned repo):
+```bash
+./run.sh -f
+```
+2. Start server:
+```bash
+./run.sh -s
+```
+3. Start client (in a separate terminal instance):
+```bash
+./run.sh -c
+```
 
--
--
-
-## Server workflow
+## Legacy workflow
+### Server workflow
 _**All must be done in the `/server` directory**_
 
 1. Create env:
@@ -55,7 +66,7 @@ SET FLASK_APP=server | FLASK_ENV=development
 flask run
 ```
 
-## Client workflow
+### Client workflow
 _**All must be done in the `/client` directory**_
 1. Install `npm` packages:
 ```bash
