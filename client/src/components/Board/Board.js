@@ -4,7 +4,7 @@ import { Results } from "../../assets/constants";
 import { fetchAPI } from "../../services/api";
 import "./Board.css";
 
-const Board = ({ board, setBoard, disabled, setYourTurn, choosePiece, endGame, move }) => {
+const Board = ({ board, setBoard, disabled, setTurnPlayer1, choosePiece, endGame }) => {
   const [validMoves, setValidMoves] = useState([]);
   const [choosingPiece, setChoosingPiece] = useState(true);
   const [prevPosition, setPrevPosition] = useState(null);
@@ -58,7 +58,7 @@ const Board = ({ board, setBoard, disabled, setYourTurn, choosePiece, endGame, m
       }
 
       // console.log(`Attempt move at (${row}, ${col})`);
-      setYourTurn(false);
+      setTurnPlayer1(false);
 
       const yourMove = await fetchAPI("/move", "POST", {
         prev: prevPosition,
@@ -72,7 +72,7 @@ const Board = ({ board, setBoard, disabled, setYourTurn, choosePiece, endGame, m
       }
       
       console.log("Bot AI is playing.")
-      const aiMove = await fetchAPI("/ai_move", "GET");
+      const aiMove = await fetchAPI("/ai_move/2", "GET");
       setBoard(aiMove.board);
 
       // TODO: enable this line after finishing AI
@@ -81,14 +81,13 @@ const Board = ({ board, setBoard, disabled, setYourTurn, choosePiece, endGame, m
       console.log(err);
     }
 
-    setYourTurn(true);
+    setTurnPlayer1(true);
     setPrevPosition(null);
   };
 
   const isMoveValid = (row, col) => {
     return (
-      validMoves.filter((move) => move.row === row && move.col === col).length >
-      0
+      validMoves.filter((move) => move.row === row && move.col === col).length > 0
     );
   };
 

@@ -12,22 +12,36 @@ import { useEffect } from "react";
 function App() {
   const [gameStarted, setGameStarted] = useState(false);
   const [board, setBoard] = useState([]);
-  const [yourTurn, setYourTurn] = useState(true);
+  const [turnPlayer1, setTurnPlayer1] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [outcome, setOutcome] = useState(null);
+  const [player1, setPlayer1] = useState("human");
 
   useEffect(() => {
     const init = async () => {
       const response = await fetchAPI("/reset", "POST");
       setBoard(response.board);
-      setYourTurn(!response.is_black_turn) // You're a white piece
+      setTurnPlayer1(!response.is_black_turn) // You're a white piece
     };
 
-    init();
-  }, [gameStarted]);
+    const AIAutoMove = async () => {
+      console.log("Bot AI is playing.")
+      const response = await fetchAPI(`/ai_move/${turnPlayer1 ? 1 : 2}`, "GET");
+      if (typeof response !== "string") {
+        setBoard(response.board);
+        setTurnPlayer1(!turnPlayer1);
+      }
+    }
+
+    if (!gameStarted) {
+      init();
+    } else if (gameStarted && player1 !== "human") {
+      AIAutoMove();
+    }
+  }, [gameStarted, turnPlayer1]);
 
   const handleStartGame = (algorithm) => {
-    console.log(`Starting with ${algorithm} algorithm`);
+    console.log(`P1: ${player1} vs P2: ${algorithm}`);
     setGameStarted(true);
   };
 
@@ -45,13 +59,6 @@ function App() {
       console.log(err);
     }
   };
-
-  // const handleMove = (row, col, prevRow, prevCol) => {
-  //   const newBoard = board;
-  //   newBoard[row][col] = newBoard[prevRow][prevCol];
-  //   newBoard[prevRow][prevCol] = null;
-  // }
-
 
   const toggleModal = () => setShowModal(!showModal);
 
@@ -87,17 +94,19 @@ function App() {
           handleStart={handleStartGame}
           handleStop={handleStopGame}
           started={gameStarted}
-          yourTurn={yourTurn}
+          turnPlayer1={turnPlayer1}
           shuffleBoard={() => setBoard(shuffleBoard(board))}
+          player1={player1}
+          setPlayer1={setPlayer1}
         />
         <Board
           board={board}
           setBoard={setBoard}
-          setYourTurn={setYourTurn}
-          disabled={!(gameStarted && yourTurn)}
+          setTurnPlayer1={setTurnPlayer1}
+          disabled={player1 !== "human" || !(gameStarted && turnPlayer1)}
           choosePiece={handleChoosePiece}
           endGame={handleEndGame}
-          // move={handleMove}
+          player1={player1}
         />
         <Modal
           className={getOutcomeClass()}
