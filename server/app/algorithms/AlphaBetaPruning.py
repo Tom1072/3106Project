@@ -1,4 +1,5 @@
 import chess
+import random
 from app.algorithms.SearchInterface import SearchInterface
 from threading import Thread
 
@@ -107,38 +108,6 @@ class AlphaBetaPruning(SearchInterface):
         else:
             return -eval
 
-    # def utility(self, board: chess.Board, player: chess.COLORS) -> int:
-    #     """Return the utility/objective/heuristic value of the state "board" for the
-    #     player "player" when the game is over
-
-    #     Args:
-    #         board (chess.Board): the current state of the game
-    #         player (chess.COLORS): the player who holds the turn in the terminal state
-
-    #     Returns:
-    #         int: the utility/objective value of the state
-    #         (positive for a win, negative for a loss, 0 for a draw)
-    #     """
-    #     total_value = 0
-    #     for i in range(0, 8):
-    #         for j in range(0, 8):
-    #             square = board.piece_at(self._convert_to_square(i, j))
-    #             if (square != None and square.color == player):
-    #                 # Get the piece type
-    #                 piece_type = square.piece_type
-    #                 # Get the piece value
-    #                 piece_value = self.VALUE_MAP[chess.PIECE_SYMBOLS[piece_type]]
-    #                 # Add the piece value to the total value
-    #                 total_value += piece_value
-    #             elif (square != None and square.color != player):
-    #                 # Get the piece type
-    #                 piece_type = square.piece_type
-    #                 # Get the piece value
-    #                 piece_value = self.VALUE_MAP[chess.PIECE_SYMBOLS[piece_type]]
-    #                 # Subtract the piece value from the total value
-    #                 total_value = piece_value
-    #     return total_value
-
     def alpha_beta_search(self, board: chess.Board, depth: int) -> chess.Move:
         """Return the minimax value of the state "board" with depth "depth"
         Args:
@@ -171,6 +140,8 @@ class AlphaBetaPruning(SearchInterface):
             board.pop()
             if v2 > v:
                 (v, move) = (v2, a)
+            if v2 == v:
+                (v, move) = (v2, a) if random.random() > 0.5 else (v, move)
             if v2 > beta:
                 return (v2, move)
             alpha = max(alpha, v2)
@@ -194,8 +165,11 @@ class AlphaBetaPruning(SearchInterface):
             (v2, _) = self.max_value_alpha_beta(
                 self.result(board, a), depth - 1, alpha, beta)
             board.pop()
-            if v2 < v:
-                (v, move) = (v2, a)
+            if v2 <= v:
+                if v2 < v:
+                    (v, move) = (v2, a)
+                else:
+                    (v, move) = (v2, a) if random.random() > 0.5 else (v, move)
             if v2 < alpha:
                 return (v2, move)
             alpha = min(alpha, v2)

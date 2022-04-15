@@ -1,4 +1,5 @@
 import chess
+import random
 from app.algorithms.SearchInterface import SearchInterface
 
 
@@ -120,8 +121,18 @@ class QuiescenceSearch(SearchInterface):
 
     def is_capture_move(self, board: chess.Board, move: chess.Move) -> bool:
         """Return True if the move "move" results in the capture of Queen, King, Rook, or Bishop, False otherwise"""
-        if board.is_capture(move) and (board.piece_type_at(move.to_square) in (chess.QUEEN, chess.ROOK, chess.BISHOP, chess.KNIGHT, chess.KING)):
-            return True
+        if board.is_capture(move):
+            if board.piece_type_at(move.to_square) == chess.KING:
+                return True
+            elif board.piece_type_at(move.to_square) == chess.QUEEN:
+                return True if random.random() < 1 else False
+            elif board.piece_type_at(move.to_square) == chess.ROOK:
+                return True if random.random() < 1 else False
+            elif board.piece_type_at(move.to_square) == chess.BISHOP:
+                return True if random.random() < 1 else False
+            elif board.piece_type_at(move.to_square) == chess.KNIGHT: 
+                return True if random.random() < 1 else False
+
         return False
 
     def contain_capture_move(self, board: chess.Board):
@@ -185,6 +196,8 @@ class QuiescenceSearch(SearchInterface):
             board.pop()
             if v2 < v:
                 (v, move) = (v2, a)
+            if v2 == v:
+                (v, move) = (v2, a) if random.random() < 0.5 else (v, move)
             if v2 < alpha:
                 return (v2, move)
             alpha = min(alpha, v2)

@@ -30,7 +30,7 @@ fi
 
 if [[ ${client_flag} == "true" ]]; then
     cd ./client
-    export REACT_APP_SERVER_URL=http://localhost:5000/api
+    export REACT_APP_SERVER_URL=http://127.0.0.1:5000/api
     npm start
     cd ..
 elif [[ ${server_flag} == "true" ]]; then
