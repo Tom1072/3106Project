@@ -67,8 +67,8 @@ const Board = ({ board, setBoard, disabled, setTurnPlayer1, choosePiece, endGame
       setBoard(yourMove.board);
 
       if (yourMove.outcome) {
-        endGame(Results[yourMove.outcome]);
-        return;      
+        endGame(yourMove.outcome);
+        // return;      
       }
       
       console.log("Bot AI is playing.")

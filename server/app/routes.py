@@ -7,10 +7,8 @@ chess_service = ChessService()
 algorithm_service1 = AlgorithmService()
 algorithm_service2 = AlgorithmService()
 
-
 @routes.route('/move', methods=['GET', 'POST'])
 def handle_get_move():
-    # print(request)
     if request.method == 'GET':
         row, col = int(request.args.get("row")), int(request.args.get("col"))
         # possible_moves = chess_board.get_possible_moves(row, col)
@@ -67,25 +65,25 @@ def handle_get_move():
 
 @routes.route('/ai_move/<player_id>', methods=['GET'])
 def handle_get_ai_move(player_id):
-    try:
-        if player_id not in ("1", "2"):
-            return "Invalid player id provided."
+    # try:
+    if player_id not in ("1", "2"):
+        return "Invalid player id provided."
 
-        if player_id == "1":
-            move = chess_service.ai_move(algorithm_service1)
-        else:
-            move = chess_service.ai_move(algorithm_service2)
+    if player_id == "1":
+        move = chess_service.ai_move(algorithm_service1)
+    else:
+        move = chess_service.ai_move(algorithm_service2)
 
-        response_payload = {
-            "prev": move["prev"],
-            "next": move["next"],
-            "board": chess_service.get_board(),
-            "is_black_turn": chess_service.is_black_turn(),
-            "outcome": chess_service.get_game_outcome()
-        }
-        return response_payload
-    except Exception:
-        return "Error occured."
+    response_payload = {
+        # "prev": move["prev"],
+        # "next": move["next"],
+        "board": chess_service.get_board(),
+        "is_black_turn": chess_service.is_black_turn(),
+        "outcome": chess_service.get_game_outcome()
+    }
+    return response_payload
+    # except Exception as e:
+    #     return str(e)
 
 @routes.route('/reset', methods=['POST'])
 def handle_reset():
