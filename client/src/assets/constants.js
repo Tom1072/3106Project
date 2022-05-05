@@ -5,7 +5,7 @@ export const AlgorithmCodes = {
 }
 
 export const Results = {
-  BLACK: "1-0",
-  WHITE: "0-1",
+  WHITE: "1-0",
+  BLACK: "0-1",
   TIE: "1/2-1/2"
 }

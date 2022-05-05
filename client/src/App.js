@@ -31,9 +31,6 @@ function App() {
         setBoard(response.board);
         setTurnPlayer1(!turnPlayer1);
       }
-      if (response.outcome) {
-        handleEndGame(response.outcome);
-      }
     }
 
     if (!gameStarted) {
@@ -67,9 +64,9 @@ function App() {
 
   const getOutcomeText = () => {
     if (outcome === Results.WHITE)
-      return "Player 1 win!";
+      return "You win!";
     else if (outcome === Results.BLACK)
-      return "Player 2 win!";
+      return "You lose!";
 
     return "Tie!";
   }
