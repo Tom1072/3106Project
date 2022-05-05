@@ -3,12 +3,14 @@
 first_flag=""
 client_flag=""
 server_flag=""
+deployment_flag=""
 
-while getopts "fcs" flag; do
+while getopts "fcsd" flag; do
     case "${flag}" in
         f) first_flag="true" ;;
         c) client_flag="true" ;;
         s) server_flag="true" ;;
+        d) deployment_flag="true" ;;
     esac
 done
 
@@ -36,7 +38,16 @@ if [[ ${client_flag} == "true" ]]; then
 elif [[ ${server_flag} == "true" ]]; then
     cd ./server
     source ./venv/bin/activate
-    export FLASK_APP=server FLASK_ENV=development
+    export FLASK_APP=server:app FLASK_ENV=deployment
+    flask run
+    cd ..
+elif [[ ${deployment_flag} == "true" ]]; then
+    cd ./client
+    export REACT_APP_SERVER_URL=/api
+    npm run build
+    cd ../server
+    source ./venv/bin/activate
+    export FLASK_APP=server:app FLASK_ENV=deployment
     flask run
     cd ..
 fi
