@@ -1,2 +1,1 @@
-release: chmod u+x release.sh && ./release.sh
-web: guicorn server:app
+web: guicorn ./server/server:app
