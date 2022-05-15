@@ -1,0 +1,25 @@
+{
+  "files": {
+    "main.css": "/static/css/main.7f5699c9.css",
+    "main.js": "/static/js/main.d56e4bc5.js",
+    "static/media/black_rook.svg": "/static/media/black_rook.fdc575582c2cbe2ec82093702945226f.svg",
+    "static/media/black_knight.svg": "/static/media/black_knight.7930be9e07b51bc0e069b1d77e31261a.svg",
+    "static/media/black_king.svg": "/static/media/black_king.6c8cc8fabe5215cc854dec67ee7781fd.svg",
+    "static/media/black_queen.svg": "/static/media/black_queen.cf388bf415c0d33ec16f23593b8d0d91.svg",
+    "static/media/white_king.svg": "/static/media/white_king.3f959aab36df6290a8e0f17c7d242c19.svg",
+    "static/media/white_knight.svg": "/static/media/white_knight.d47944d2cee4f8c707d1907706c142fa.svg",
+    "static/media/white_bishop.svg": "/static/media/white_bishop.cf781aa194cfdc1a617acf2b1a262bb7.svg",
+    "static/media/black_bishop.svg": "/static/media/black_bishop.04932f63ef10dcdee115b649286230f5.svg",
+    "static/media/white_rook.svg": "/static/media/white_rook.9e48b84f189eea24339f8a679e7a664f.svg",
+    "static/media/white_queen.svg": "/static/media/white_queen.7a1aecff0f22ff68c43f9b7f8a81d0b4.svg",
+    "static/media/black_pawn.svg": "/static/media/black_pawn.be5d44ca5ee868885d216188996e3a00.svg",
+    "static/media/white_pawn.svg": "/static/media/white_pawn.50273cc6d86861932d0a01c38274009a.svg",
+    "index.html": "/index.html",
+    "main.7f5699c9.css.map": "/static/css/main.7f5699c9.css.map",
+    "main.d56e4bc5.js.map": "/static/js/main.d56e4bc5.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.7f5699c9.css",
+    "static/js/main.d56e4bc5.js"
+  ]
+}
