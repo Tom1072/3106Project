@@ -43,22 +43,22 @@ elif [[ ${run_dev_server} == "true" ]]; then
     # Prereqs: run.sh -f
     echo "Running development server..."
     source ./venv/bin/activate
-    export FLASK_APP=./server/server:app FLASK_ENV=development
+    export FLASK_APP=./server:app FLASK_ENV=development
     flask run
 fi
 
 if [[ ${test_run_production} == "true" ]]; then
     # Prereqs: run.sh -f
     echo "Setting up production environment..."
+    source ./venv/bin/activate
 
-    export REACT_APP_SERVER_URL=/api
-    export FLASK_APP=./server/server:app FLASK_ENV=deployment
     cd ./client
+    export REACT_APP_SERVER_URL=/api
     npm run build
     cd ..
+    export FLASK_APP=server:app FLASK_ENV=deployment
 
     echo "Test running production..."
-    source ./venv/bin/activate
     flask run
 fi
 
