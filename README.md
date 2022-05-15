@@ -88,3 +88,19 @@ SET REACT_APP_SERVER_URL=http://127.0.0.1:5000/api
 ```
 npm start
 ```
+
+## Production workflow
+### Test running production
+```
+./run.sh -f && ./run.sh -p && ./run.sh -t
+```
+### Prepare for deployment
+1. Reinstall the environment
+```
+./run.sh -f && ./run.sh -p
+```
+2. Deploy to heroku
+```
+git commit -am "Deploy blah blah blah"
+git push heroku main
+```
