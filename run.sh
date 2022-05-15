@@ -8,11 +8,11 @@ run_dev_server=""
 
 while getopts "fptcs" flag; do
     case "${flag}" in
-        f) first_time_setup="true" ;;
-        p) prepare_production="true" ;;
-        t) test_run_production="true" ;;
-        c) run_dev_client="true" ;;
-        s) run_dev_server="true" ;;
+        f) first_time_setup="true" ;;    # First time setup
+        c) run_dev_client="true" ;;      # Run dev client
+        s) run_dev_server="true" ;;      # Run dev server
+        t) test_run_production="true" ;; # Rebuild and test run production app
+        p) prepare_production="true" ;;  # Prepare production envirnonment (used only by Procfile)
     esac
 done
 
@@ -32,24 +32,6 @@ if [[ ${first_time_setup} == "true" ]]; then
     cd ..
 fi
 
-if [[ ${prepare_production} == "true" ]]; then
-    # Prereqs: run.sh -f
-    echo "Setting up production environment..."
-
-    export REACT_APP_SERVER_URL=/api
-    cd ./client
-    npm run build
-    cd ..
-fi
-
-if [[ ${test_run_production} == "true" ]]; then
-    # Prereqs: run.sh -f && run.sh -p
-    echo "Test running production..."
-    export FLASK_APP=./server/server:app FLASK_ENV=deployment
-    source ./venv/bin/activate
-    flask run
-fi
-
 if [[ ${run_dev_client} == "true" ]]; then
     # Prereqs: run.sh -f
     echo "Running development client..."
@@ -63,4 +45,25 @@ elif [[ ${run_dev_server} == "true" ]]; then
     source ./venv/bin/activate
     export FLASK_APP=./server/server:app FLASK_ENV=development
     flask run
+fi
+
+if [[ ${test_run_production} == "true" ]]; then
+    # Prereqs: run.sh -f
+    echo "Setting up production environment..."
+
+    export REACT_APP_SERVER_URL=/api
+    export FLASK_APP=./server/server:app FLASK_ENV=deployment
+    cd ./client
+    npm run build
+    cd ..
+
+    echo "Test running production..."
+    source ./venv/bin/activate
+    flask run
+fi
+
+
+if [[ ${prepare_production} == "true" ]]; then
+    # Only used by Procfile
+    export REACT_APP_SERVER_URL=/api
 fi
